@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.ch-wrap{position:absolute;top:40px;left:60px;right:60px;animation:fadeIn .5s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.ch-wrap.hidden{display:none!important;}
+
+/* ── HEADER ── */
+.ch-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;height:64px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  border-bottom:3px solid #2a5ba8;
+}
+.ch-head-left{display:flex;flex-direction:column;gap:2px;}
+.ch-head-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:3px;}
+.ch-head-chase{font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;}
+.ch-head-right{display:flex;gap:24px;align-items:center;}
+.ch-head-stat{display:flex;flex-direction:column;align-items:center;}
+.ch-head-val{font-size:26px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;line-height:1;}
+.ch-head-val.cyan{color:#00e5ff;}
+.ch-head-val.gold{color:#ffcc00;}
+.ch-head-val.red{color:#ff4466;}
+.ch-head-val.green{color:#44cc88;}
+.ch-head-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;}
+.ch-head-div{width:1px;height:34px;background:rgba(255,255,255,.15);}
+.ch-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── MAIN BODY ── */
+.ch-body{
+  background:#0d1b2e;display:grid;
+  grid-template-columns:1fr 1px 320px 1px 320px;
+}
+.ch-divider{background:rgba(255,255,255,.08);margin:20px 0;}
+
+/* big NEED block */
+.ch-need-block{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 20px;
+}
+.ch-need-lbl{font-size:12px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;}
+.ch-need-num{
+  font-size:140px;font-weight:900;line-height:1;letter-spacing:-4px;
+  font-family:'Barlow',sans-serif;
+}
+.ch-need-num.easy{color:#44cc88;text-shadow:0 0 40px rgba(68,204,136,.3);}
+.ch-need-num.tight{color:#ffcc00;text-shadow:0 0 40px rgba(255,204,0,.3);}
+.ch-need-num.hard{color:#ff4466;text-shadow:0 0 40px rgba(255,68,102,.3);}
+.ch-need-from{font-size:20px;font-weight:700;color:rgba(255,255,255,.5);margin-top:8px;}
+.ch-need-from strong{color:#fff;font-weight:900;}
+
+/* stats columns */
+.ch-stats{display:flex;flex-direction:column;justify-content:center;padding:20px 28px;gap:18px;}
+.ch-stat{display:flex;flex-direction:column;}
+.ch-stat-lbl{font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px;}
+.ch-stat-val{font-size:38px;font-weight:900;color:#fff;line-height:1;font-family:'Barlow',sans-serif;}
+.ch-stat-val.cyan{color:#00e5ff;}
+.ch-stat-val.red{color:#ff4466;}
+.ch-stat-val.gold{color:#ffcc00;}
+
+/* ── PROGRESS ── */
+.ch-progress{background:#0a1624;padding:20px 28px;border-top:1px solid rgba(255,255,255,.07);}
+.ch-prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.ch-prog-title{font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;}
+.ch-prog-pct{font-size:20px;font-weight:900;color:#00e5ff;font-family:'Barlow',sans-serif;}
+.ch-track{height:20px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.ch-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.22,1,.36,1);position:relative;}
+.ch-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:#fff;opacity:.7;border-radius:2px;}
+.ch-milestones{display:flex;justify-content:space-between;margin-top:5px;}
+.ch-mile{font-size:11px;color:rgba(255,255,255,.35);font-weight:600;}
+
+/* ── OVER REQUIREMENTS ── */
+.ch-overs-req{background:#0d1b2e;padding:14px 28px;border-top:1px solid rgba(255,255,255,.06);}
+.ch-or-title{font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.ch-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.ch-pill{
+  display:flex;flex-direction:column;align-items:center;
+  min-width:56px;padding:6px 10px;border-radius:3px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+}
+.ch-pill-ov{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;}
+.ch-pill-n{font-size:19px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;}
+.ch-pill-n.easy{color:#44cc88;}
+.ch-pill-n.hard{color:#ff4466;}
+
+/* ── FOOTER ── */
+.ch-footer{
+  background:#0a1624;padding:12px 28px;
+  display:flex;gap:28px;align-items:center;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-radius:0 0 6px 6px;
+}
+.ch-fstat{display:flex;align-items:baseline;gap:6px;}
+.ch-fval{font-size:20px;font-weight:900;color:#00e5ff;font-family:'Barlow',sans-serif;}
+.ch-flbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;}
+.ch-fdiv{width:1px;height:18px;background:rgba(255,255,255,.1);}
+.ch-result{margin-left:auto;font-size:22px;font-weight:900;color:#ffcc00;text-transform:uppercase;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="ch-wrap hidden" id="ch-wrap">
+  <!-- Header -->
+  <div class="ch-head" id="ch-head">
+    <div class="ch-head-left">
+      <div class="ch-head-label">Chase Meter — 2nd Innings</div>
+      <div class="ch-head-chase" id="ch-chase-text">Team needs X to win</div>
+    </div>
+    <div class="ch-head-right">
+      <div class="ch-head-stat"><div class="ch-head-val" id="ch-h-score">0/0</div><div class="ch-head-lbl">Score</div></div>
+      <div class="ch-head-div"></div>
+      <div class="ch-head-stat"><div class="ch-head-val cyan" id="ch-h-crr">0.00</div><div class="ch-head-lbl">CRR</div></div>
+      <div class="ch-head-div"></div>
+      <div class="ch-head-stat"><div class="ch-head-val red" id="ch-h-rrr">0.00</div><div class="ch-head-lbl">RRR</div></div>
+      <div class="ch-head-div"></div>
+      <div class="ch-head-stat"><div class="ch-head-val gold" id="ch-h-inn1">—</div><div class="ch-head-lbl">1st Inn</div></div>
+    </div>
+  </div>
+  <div class="ch-accent"></div>
+
+  <!-- Main body -->
+  <div class="ch-body">
+    <div class="ch-need-block">
+      <div class="ch-need-lbl">Runs Needed</div>
+      <div class="ch-need-num" id="ch-need">—</div>
+      <div class="ch-need-from">from <strong id="ch-balls">—</strong> balls &nbsp;(<strong id="ch-overs">—</strong> overs)</div>
+    </div>
+
+    <div class="ch-divider"></div>
+
+    <div class="ch-stats">
+      <div class="ch-stat"><div class="ch-stat-lbl">Current Run Rate</div><div class="ch-stat-val cyan" id="ch-crr">0.00</div></div>
+      <div class="ch-stat"><div class="ch-stat-lbl">Required Run Rate</div><div class="ch-stat-val red" id="ch-rrr">0.00</div></div>
+      <div class="ch-stat"><div class="ch-stat-lbl">Wickets in Hand</div><div class="ch-stat-val" id="ch-wkts">—</div></div>
+    </div>
+
+    <div class="ch-divider"></div>
+
+    <div class="ch-stats">
+      <div class="ch-stat"><div class="ch-stat-lbl">Projected Score</div><div class="ch-stat-val gold" id="ch-proj">—</div></div>
+      <div class="ch-stat"><div class="ch-stat-lbl">Partnership</div><div class="ch-stat-val cyan" id="ch-part">0 (0)</div></div>
+      <div class="ch-stat"><div class="ch-stat-lbl">Balls Bowled</div><div class="ch-stat-val" id="ch-balls-done">0</div></div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="ch-progress">
+    <div class="ch-prog-top">
+      <div class="ch-prog-title">Chase Progress</div>
+      <div class="ch-prog-pct" id="ch-pct">0%</div>
+    </div>
+    <div class="ch-track">
+      <div class="ch-fill" id="ch-fill" style="width:0%;background:linear-gradient(90deg,#2a5ba8,#44cc88)"></div>
+    </div>
+    <div class="ch-milestones">
+      <span class="ch-mile">0</span>
+      <span class="ch-mile" id="ch-m25"></span>
+      <span class="ch-mile" id="ch-m50"></span>
+      <span class="ch-mile" id="ch-m75"></span>
+      <span class="ch-mile" id="ch-mt" style="color:#ffcc00"></span>
+    </div>
+  </div>
+
+  <!-- Over requirements -->
+  <div class="ch-overs-req">
+    <div class="ch-or-title">Required per over (remaining)</div>
+    <div class="ch-pills" id="ch-pills"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="ch-footer">
+    <div class="ch-fstat"><span class="ch-fval" id="ch-f-e">0</span><span class="ch-flbl">Extras</span></div>
+    <div class="ch-fdiv"></div>
+    <div class="ch-fstat"><span class="ch-fval" id="ch-f-4">0</span><span class="ch-flbl">Fours</span></div>
+    <div class="ch-fdiv"></div>
+    <div class="ch-fstat"><span class="ch-fval" id="ch-f-6">0</span><span class="ch-flbl">Sixes</span></div>
+    <div class="ch-fdiv"></div>
+    <div class="ch-fstat"><span class="ch-fval" id="ch-f-d">0</span><span class="ch-flbl">Dots</span></div>
+    <div class="ch-result" id="ch-result"></div>
+  </div>
+</div>
+
+<script>
+function ws(){const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();}
+function g(id){return document.getElementById(id);}
+
+function render(S){
+  const wrap=g('ch-wrap');
+  const inn2=S.innings[1],inn1=S.innings[0];
+  if(!inn2||!inn1){wrap.classList.add('hidden');return;}
+  wrap.classList.remove('hidden');
+  const m=S.match;
+  const batting=m[inn2.battingTeamKey],bowling=m[inn2.bowlingTeamKey];
+
+  g('ch-head').style.borderBottomColor=batting.color||'#2a5ba8';
+  g('ch-chase-text').textContent=`${batting.name.toUpperCase()} need ${inn2.target} to win`;
+  g('ch-h-inn1').textContent=`${inn1.score}/${inn1.wickets}`;
+  g('ch-h-score').textContent=`${inn2.score}/${inn2.wickets}`;
+
+  const balls=inn2.oversCompleted*6+inn2.currentOverBalls;
+  const totalBalls=m.overs*6;
+  const ballsLeft=totalBalls-balls;
+  const need=Math.max(0,inn2.target-inn2.score);
+  const wktsLeft=(m.playersPerSide-1)-inn2.wickets;
+  const crr=balls>0?(inn2.score/balls*6).toFixed(2):'0.00';
+  const rrr=ballsLeft>0&&need>0?(need/ballsLeft*6).toFixed(2):'0.00';
+  const rrrNum=parseFloat(rrr);
+
+  g('ch-h-crr').textContent=crr;
+  g('ch-h-rrr').textContent=rrr;
+  g('ch-crr').textContent=crr;
+  g('ch-rrr').textContent=rrr;
+  g('ch-wkts').textContent=wktsLeft;
+  g('ch-balls-done').textContent=balls;
+  g('ch-part').textContent=`${inn2.currentPartnership?.runs||0} (${inn2.currentPartnership?.balls||0})`;
+
+  const needCls=need<=0?'easy':rrrNum<=6?'easy':rrrNum<=10?'tight':'hard';
+  g('ch-need').textContent=need>0?need:(inn2.score>=inn2.target?'WON!':'0');
+  g('ch-need').className=`ch-need-num ${needCls}`;
+  g('ch-balls').textContent=ballsLeft;
+  g('ch-overs').textContent=`${Math.floor(ballsLeft/6)}.${ballsLeft%6}`;
+
+  const proj=balls>0?Math.round(inn2.score/balls*totalBalls):0;
+  g('ch-proj').textContent=proj>0?proj:'—';
+  g('ch-proj').style.color=proj>=inn2.target?'#44cc88':'#ff4466';
+
+  // Progress
+  const pct=Math.min(100,Math.round(inn2.score/(inn2.target-1)*100));
+  g('ch-fill').style.width=pct+'%';
+  g('ch-fill').style.background=pct>=100?'#44cc88':pct>60?'linear-gradient(90deg,#2a5ba8,#ffcc00)':'linear-gradient(90deg,#2a5ba8,#44cc88)';
+  g('ch-pct').textContent=pct+'%';
+  const t=inn2.target-1;
+  g('ch-m25').textContent=Math.round(t*.25);g('ch-m50').textContent=Math.round(t*.5);
+  g('ch-m75').textContent=Math.round(t*.75);g('ch-mt').textContent=`${inn2.target}★`;
+
+  // Pills
+  let pills='',remNeed=need,remBalls=ballsLeft;
+  for(let ov=inn2.oversCompleted+1;ov<=m.overs&&remBalls>0;ov++){
+    const b=Math.min(6,remBalls);
+    const n=remBalls>0?Math.ceil(remNeed/remBalls*b):0;
+    pills+=`<div class="ch-pill"><div class="ch-pill-ov">OV ${ov}</div><div class="ch-pill-n ${n<=6?'easy':n>=12?'hard':''}">${n}</div></div>`;
+    remBalls-=6;
+  }
+  g('ch-pills').innerHTML=pills||'<span style="color:rgba(255,255,255,.3)">No overs remaining</span>';
+
+  // Footer
+  const e=inn2.extras;
+  g('ch-f-e').textContent=e.wides+e.noBalls+e.byes+e.legByes;
+  let f4=0,f6=0,fd=0;
+  [...inn2.overHistory.flatMap(o=>o.balls),...(inn2.currentOverBallHistory||[])].forEach(b=>{
+    if(b.batsmanRuns===4)f4++;else if(b.batsmanRuns===6)f6++;else if(b.totalRuns===0)fd++;
+  });
+  g('ch-f-4').textContent=f4;g('ch-f-6').textContent=f6;g('ch-f-d').textContent=fd;
+
+  if(S.status==='complete'){
+    g('ch-result').textContent=inn2.score>=inn2.target
+      ?`${batting.name} won by ${wktsLeft} wkt${wktsLeft!==1?'s':''}`
+      :`${bowling.name} won by ${inn2.target-inn2.score-1} runs`;
+  } else g('ch-result').textContent='';
+}
+ws();
+</script>
+</body>
+</html>

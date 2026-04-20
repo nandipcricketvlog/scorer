@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,900;1,900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;}
+
+/* ── SCENE ── */
+.scene{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;perspective:1200px;
+}
+
+/* ── VORTEX RINGS ── */
+.vortex{
+  position:absolute;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+.ring{
+  position:absolute;border-radius:50%;
+  border:3px solid transparent;
+  animation:ringOut 1.8s ease-out forwards;
+  opacity:0;
+}
+@keyframes ringOut{
+  0%{transform:scale(0) rotate(0deg);opacity:.9;}
+  100%{transform:scale(5) rotate(180deg);opacity:0;}
+}
+
+/* ── LIGHT RAYS ── */
+.rays{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.ray{
+  position:absolute;width:4px;border-radius:2px;
+  transform-origin:center bottom;
+  animation:rayFlash 1.2s ease-out forwards;
+  opacity:0;
+}
+@keyframes rayFlash{
+  0%{opacity:0;height:0;}
+  15%{opacity:.9;}
+  100%{opacity:0;height:600px;}
+}
+
+/* ── CORNER FLARES ── */
+.flares{position:absolute;inset:0;}
+.flare{
+  position:absolute;width:200px;height:200px;border-radius:50%;
+  filter:blur(60px);
+  animation:flarePop 2.5s ease-out forwards;
+  opacity:0;
+}
+@keyframes flarePop{
+  0%{opacity:0;transform:scale(0);}
+  20%{opacity:.7;transform:scale(1);}
+  100%{opacity:0;transform:scale(1.5);}
+}
+
+/* ── 3D MAIN TEXT ── */
+.cel-main{
+  position:relative;z-index:20;
+  display:flex;flex-direction:column;align-items:center;
+  transform-style:preserve-3d;
+}
+
+.cel-num{
+  font-family:'Barlow',sans-serif;
+  font-weight:900;font-style:italic;
+  line-height:.85;text-align:center;
+  position:relative;
+  animation:numEntry 2.8s cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;
+}
+
+@keyframes numEntry{
+  0%  {opacity:0;transform:perspective(900px) rotateX(55deg) rotateY(-18deg) scale(.3);}
+  18% {opacity:1;transform:perspective(900px) rotateX(-7deg) rotateY(5deg)   scale(1.06);}
+  28% {opacity:1;transform:perspective(900px) rotateX(2deg)  rotateY(-2deg)  scale(1);}
+  70% {opacity:1;transform:perspective(900px) rotateX(0deg)  rotateY(0deg)   scale(1);}
+  100%{opacity:0;transform:perspective(900px) rotateX(-18deg) rotateY(8deg)  scale(1.15);}
+}
+
+.cel-word{
+  font-family:'Barlow',sans-serif;font-weight:900;
+  letter-spacing:8px;text-transform:uppercase;
+  animation:wordEntry 2.8s .08s cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;
+}
+@keyframes wordEntry{
+  0%  {opacity:0;transform:translateY(40px) scaleX(.6);}
+  18% {opacity:1;transform:translateY(-4px) scaleX(1.04);}
+  28% {opacity:1;transform:translateY(0)    scaleX(1);}
+  70% {opacity:1;transform:translateY(0)    scaleX(1);}
+  100%{opacity:0;transform:translateY(-30px) scaleX(1.1);}
+}
+
+.cel-player{
+  font-family:'Barlow',sans-serif;font-weight:900;
+  letter-spacing:4px;text-transform:uppercase;
+  animation:wordEntry 2.8s .18s cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;color:rgba(255,255,255,.9);
+}
+
+/* ── THEMES — text-shadow only, no pseudo-elements ── */
+
+/* FOUR — white number, green 3D extrusion via stacked shadows */
+.cel.four .cel-num{
+  color:#ffffff;
+  text-shadow:
+    /* coloured glow behind */
+    0 0 80px rgba(68,238,136,.9), 0 0 160px rgba(68,238,136,.5),
+    /* 3D extrusion: 10 steps of green, offset down-right */
+    2px  2px  0 #33cc66,
+    4px  4px  0 #2ebd5e,
+    6px  6px  0 #28aa54,
+    8px  8px  0 #229948,
+    10px 10px 0 #1c883e,
+    12px 12px 0 #177733,
+    14px 14px 0 #126628,
+    16px 16px 0 #0d551e,
+    18px 18px 0 #094414,
+    20px 20px 8px rgba(0,0,0,.8);
+}
+.cel.four .cel-word{color:#ffffff;text-shadow:0 0 20px rgba(68,238,136,.9),1px 2px 0 #228844,0 0 60px rgba(68,238,136,.4);}
+.cel.four .ring{border-color:#44ee88;box-shadow:0 0 20px #44ee88;}
+.cel.four .ray{background:linear-gradient(180deg,#44ee88,transparent);}
+.cel.four .flare{background:#44ee88;}
+
+/* SIX — white number, gold 3D extrusion */
+.cel.six .cel-num{
+  color:#ffffff;
+  text-shadow:
+    0 0 80px rgba(255,210,0,1), 0 0 160px rgba(255,204,0,.6),
+    2px  2px  0 #ffcc00,
+    4px  4px  0 #eebb00,
+    6px  6px  0 #ddaa00,
+    8px  8px  0 #cc9900,
+    10px 10px 0 #bb8800,
+    12px 12px 0 #aa7700,
+    14px 14px 0 #996600,
+    16px 16px 0 #885500,
+    18px 18px 0 #774400,
+    20px 20px 8px rgba(0,0,0,.8);
+}
+.cel.six .cel-word{color:#ffffff;text-shadow:0 0 20px rgba(255,204,0,1),1px 2px 0 #aa7700,0 0 60px rgba(255,204,0,.5);}
+.cel.six .ring{border-color:#ffcc00;box-shadow:0 0 20px #ffcc00;}
+.cel.six .ray{background:linear-gradient(180deg,#ffcc00,transparent);}
+.cel.six .flare{background:#ffcc00;}
+
+/* WICKET — white number, red 3D extrusion */
+.cel.wicket .cel-num{
+  color:#ffffff;
+  text-shadow:
+    0 0 80px rgba(255,40,80,.95), 0 0 160px rgba(255,34,68,.5),
+    2px  2px  0 #ff3355,
+    4px  4px  0 #ee2244,
+    6px  6px  0 #dd1133,
+    8px  8px  0 #cc0022,
+    10px 10px 0 #bb0022,
+    12px 12px 0 #aa0011,
+    14px 14px 0 #990011,
+    16px 16px 0 #880011,
+    18px 18px 0 #770011,
+    20px 20px 8px rgba(0,0,0,.8);
+}
+.cel.wicket .cel-word{color:#ffffff;text-shadow:0 0 20px rgba(255,68,102,.9),1px 2px 0 #aa1133,0 0 60px rgba(255,68,102,.4);}
+.cel.wicket .ring{border-color:#ff4466;box-shadow:0 0 20px #ff4466;}
+.cel.wicket .ray{background:linear-gradient(180deg,#ff4466,transparent);}
+.cel.wicket .flare{background:#ff4466;}
+
+/* ── FRAME CORNERS ── */
+.corners{position:absolute;inset:0;pointer-events:none;z-index:5;}
+.corners svg{width:100%;height:100%;}
+.corner-line{
+  stroke-dasharray:200;stroke-dashoffset:200;
+  animation:drawLine 2.8s ease forwards;
+}
+@keyframes drawLine{
+  0%{stroke-dashoffset:200;opacity:1;}
+  25%{stroke-dashoffset:0;opacity:1;}
+  75%{stroke-dashoffset:0;opacity:1;}
+  100%{stroke-dashoffset:200;opacity:0;}
+}
+
+/* hidden state */
+.cel{display:none;}
+.cel.active{display:flex;align-items:center;justify-content:center;position:absolute;inset:0;}
+</style>
+</head>
+<body>
+
+<div class="cel four" id="cel-four">
+  <div class="flares" id="four-flares"></div>
+  <div class="vortex" id="four-vortex"></div>
+  <div class="rays" id="four-rays"></div>
+  <div class="corners"><svg viewBox="0 0 1920 1080">
+    <polyline class="corner-line" points="0,0 260,0" fill="none" stroke="#44ee88" stroke-width="8"/>
+    <polyline class="corner-line" points="0,0 0,210" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,0 1660,0" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="1920,0 1920,210" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="0,1080 260,1080" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="0,1080 0,870" fill="none" stroke="#44ee88" stroke-width="8"/>
+    <polyline class="corner-line" points="1920,1080 1660,1080" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,1080 1920,870" fill="none" stroke="#44ee88" stroke-width="8" style="animation-delay:.1s"/>
+  </svg></div>
+  <div class="scene">
+    <div class="cel-main">
+      <div class="cel-num" id="four-num" style="font-size:520px">4</div>
+      <div class="cel-word" style="font-size:52px;margin-top:-20px">BOUNDARY!</div>
+      <div class="cel-player" style="font-size:30px;margin-top:10px" id="four-name"></div>
+    </div>
+  </div>
+</div>
+
+<div class="cel six" id="cel-six">
+  <div class="flares" id="six-flares"></div>
+  <div class="vortex" id="six-vortex"></div>
+  <div class="rays" id="six-rays"></div>
+  <div class="corners"><svg viewBox="0 0 1920 1080">
+    <polyline class="corner-line" points="0,0 300,0" fill="none" stroke="#ffcc00" stroke-width="10"/>
+    <polyline class="corner-line" points="0,0 0,240" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,0 1620,0" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="1920,0 1920,240" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="0,1080 300,1080" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="0,1080 0,840" fill="none" stroke="#ffcc00" stroke-width="10"/>
+    <polyline class="corner-line" points="1920,1080 1620,1080" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,1080 1920,840" fill="none" stroke="#ffcc00" stroke-width="10" style="animation-delay:.1s"/>
+  </svg></div>
+  <div class="scene">
+    <div class="cel-main">
+      <div class="cel-num" id="six-num" style="font-size:560px">6</div>
+      <div class="cel-word" style="font-size:58px;margin-top:-30px">MAXIMUM!</div>
+      <div class="cel-player" style="font-size:30px;margin-top:12px" id="six-name"></div>
+    </div>
+  </div>
+</div>
+
+<div class="cel wicket" id="cel-wicket">
+  <div class="flares" id="wkt-flares"></div>
+  <div class="vortex" id="wkt-vortex"></div>
+  <div class="rays" id="wkt-rays"></div>
+  <div class="corners"><svg viewBox="0 0 1920 1080">
+    <polyline class="corner-line" points="0,0 220,0" fill="none" stroke="#ff4466" stroke-width="7"/>
+    <polyline class="corner-line" points="0,0 0,180" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,0 1700,0" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="1920,0 1920,180" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="0,1080 220,1080" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.1s"/>
+    <polyline class="corner-line" points="0,1080 0,900" fill="none" stroke="#ff4466" stroke-width="7"/>
+    <polyline class="corner-line" points="1920,1080 1700,1080" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.05s"/>
+    <polyline class="corner-line" points="1920,1080 1920,900" fill="none" stroke="#ff4466" stroke-width="7" style="animation-delay:.1s"/>
+  </svg></div>
+  <div class="scene">
+    <div class="cel-main">
+      <div class="cel-num" id="wkt-num" style="font-size:480px">W</div>
+      <div class="cel-word" style="font-size:52px;margin-top:-10px" id="wkt-how-text">WICKET!</div>
+      <div class="cel-player" style="font-size:30px;margin-top:10px" id="wkt-name"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RING_COUNTS  = { four: 3, six: 5, wicket: 3 };
+const RAY_COUNTS   = { four: 12, six: 18, wicket: 10 };
+const FLARE_POS    = [
+  {top:'5%',left:'5%'},{top:'5%',right:'5%'},{bottom:'5%',left:'5%'},{bottom:'5%',right:'5%'},
+  {top:'5%',left:'45%'},{bottom:'5%',left:'45%'}
+];
+
+function buildVortex(id, kind, color) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  for (let i=0; i<RING_COUNTS[kind]; i++) {
+    const r = document.createElement('div');
+    r.className = 'ring';
+    const size = 120 + i*90;
+    r.style.cssText = `width:${size}px;height:${size}px;border-color:${color};` +
+      `animation-delay:${i*0.12}s;animation-duration:${1.6+i*0.2}s;` +
+      `border-width:${3-i*0.5}px;`;
+    el.appendChild(r);
+  }
+}
+
+function buildRays(id, kind, color) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const n = RAY_COUNTS[kind];
+  for (let i=0; i<n; i++) {
+    const r = document.createElement('div');
+    r.className = 'ray';
+    const angle = (360/n)*i;
+    const len = 200 + Math.random()*400;
+    r.style.cssText = `background:linear-gradient(0deg,${color},transparent);` +
+      `height:0px;transform:rotate(${angle}deg) translateY(-50%);` +
+      `animation-delay:${Math.random()*0.2}s;animation-duration:${0.8+Math.random()*0.5}s;` +
+      `left:50%;top:50%;margin-left:-2px;transform-origin:center bottom;` +
+      `transform:rotate(${angle}deg) translateY(-540px);`;
+    // override with correct transform
+    r.style.position='absolute';
+    r.style.width='3px';
+    r.style.height='0';
+    r.style.left='960px';
+    r.style.top='540px';
+    r.style.transformOrigin='0 0';
+    r.style.transform=`rotate(${angle}deg)`;
+    r.style.background=`linear-gradient(180deg,${color},transparent)`;
+    r.style.animation=`rayFlash ${0.9+Math.random()*0.4}s ${Math.random()*0.15}s ease-out forwards`;
+    el.appendChild(r);
+  }
+}
+
+function buildFlares(id, color) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  FLARE_POS.forEach((pos, i) => {
+    const f = document.createElement('div');
+    f.className = 'flare';
+    f.style.background = color;
+    f.style.animationDelay = `${i*0.06}s`;
+    Object.assign(f.style, pos);
+    el.appendChild(f);
+  });
+}
+
+function showCelebration(kind, data) {
+  // Hide all
+  ['cel-four','cel-six','cel-wicket'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    void el.offsetWidth;
+  });
+
+  const idMap = { four:'cel-four', six:'cel-six', wicket:'cel-wicket' };
+  const colorMap = { four:'#44ee88', six:'#ffcc00', wicket:'#ff4466' };
+  const cel = document.getElementById(idMap[kind]);
+  const color = colorMap[kind];
+
+  // Build effects
+  buildVortex(`${kind==='wicket'?'wkt':kind}-vortex`, kind, color);
+  buildRays(`${kind==='wicket'?'wkt':kind}-rays`, kind, color);
+  buildFlares(`${kind==='wicket'?'wkt':kind}-flares`, color);
+
+  // Set text
+  if (kind==='four') {
+    document.getElementById('four-name').textContent = data.batsmanName||'';
+  } else if (kind==='six') {
+    document.getElementById('six-name').textContent = data.batsmanName||'';
+  } else {
+    document.getElementById('wkt-name').textContent = data.batsmanName||'';
+    const howMap={bowled:'BOWLED!',caught:'CAUGHT!',lbw:'LBW!',runout:'RUN OUT!',stumped:'STUMPED!',hitwicket:'HIT WICKET!'};
+    document.getElementById('wkt-how-text').textContent = howMap[data.how]||'WICKET!';
+  }
+
+  // Reset animations on num/word
+  const numEl = document.getElementById(kind==='wicket'?'wkt-num':kind==='six'?'six-num':'four-num');
+  numEl.style.animation='none';
+  void numEl.offsetWidth;
+  numEl.style.animation='';
+
+  cel.classList.add('active');
+
+  // Auto hide after animation
+  setTimeout(() => cel.classList.remove('active'), 3200);
+}
+
+function ws() {
+  const w = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  w.onmessage = e => {
+    const msg = JSON.parse(e.data);
+    if (msg.type==='event') {
+      const { kind, ...data } = msg.payload;
+      if (['four','six','wicket'].includes(kind)) showCelebration(kind, data);
+    }
+  };
+  w.onclose = () => setTimeout(ws, 3000);
+  w.onerror = () => w.close();
+}
+ws();
+</script>
+</body>
+</html>

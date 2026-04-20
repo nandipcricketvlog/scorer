@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.rr-wrap{position:absolute;top:40px;left:60px;right:60px;bottom:40px;display:flex;flex-direction:column;animation:fadeIn .5s ease both;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── HEADER ── */
+.rr-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;height:64px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  border-bottom:3px solid #2a5ba8;
+}
+.rr-head-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:3px;margin-bottom:2px;}
+.rr-head-team{font-size:24px;font-weight:900;color:#fff;text-transform:uppercase;font-family:'Barlow',sans-serif;}
+.rr-head-right{display:flex;gap:24px;align-items:center;}
+.rr-stat{display:flex;flex-direction:column;align-items:center;}
+.rr-stat-val{font-size:26px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;line-height:1;}
+.rr-stat-val.cyan{color:#00e5ff;}
+.rr-stat-val.red{color:#ff4466;}
+.rr-stat-val.gold{color:#ffcc00;}
+.rr-stat-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;}
+.rr-div{width:1px;height:34px;background:rgba(255,255,255,.15);}
+.rr-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── CHART AREA ── */
+.rr-chart-area{
+  background:#0d1b2e;flex:1;padding:20px 28px 16px;position:relative;
+}
+.rr-legend{display:flex;gap:24px;margin-bottom:12px;}
+.rr-leg-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);}
+.rr-leg-dot{width:14px;height:4px;border-radius:2px;}
+
+/* ── OVER PILLS ROW ── */
+.rr-overs{
+  background:#0a1624;padding:12px 28px;
+  display:flex;gap:8px;overflow-x:auto;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-radius:0 0 6px 6px;
+}
+.rr-pill{
+  display:flex;flex-direction:column;align-items:center;
+  min-width:52px;padding:5px 8px;border-radius:3px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.rr-pill-ov{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;}
+.rr-pill-r{font-size:18px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;line-height:1;}
+.rr-pill-r.high{color:#44cc88;}
+.rr-pill-r.low{color:#ff4466;}
+</style>
+</head>
+<body>
+<div class="rr-wrap">
+  <div class="rr-head" id="rr-head">
+    <div>
+      <div class="rr-head-label">Run Rate Analysis</div>
+      <div class="rr-head-team" id="rr-team">—</div>
+    </div>
+    <div class="rr-head-right">
+      <div class="rr-stat"><div class="rr-stat-val" id="rr-score">0/0</div><div class="rr-stat-lbl">Score</div></div>
+      <div class="rr-div"></div>
+      <div class="rr-stat"><div class="rr-stat-val cyan" id="rr-crr">0.00</div><div class="rr-stat-lbl">CRR</div></div>
+      <div class="rr-div" id="rr-rrr-div" style="display:none"></div>
+      <div class="rr-stat" id="rr-rrr-stat" style="display:none"><div class="rr-stat-val red" id="rr-rrr">0.00</div><div class="rr-stat-lbl">RRR</div></div>
+      <div class="rr-div" id="rr-tgt-div" style="display:none"></div>
+      <div class="rr-stat" id="rr-tgt-stat" style="display:none"><div class="rr-stat-val gold" id="rr-tgt">0</div><div class="rr-stat-lbl">Target</div></div>
+    </div>
+  </div>
+  <div class="rr-accent"></div>
+
+  <div class="rr-chart-area">
+    <div class="rr-legend">
+      <div class="rr-leg-item"><div class="rr-leg-dot" style="background:#4488ff"></div>Runs per over</div>
+      <div class="rr-leg-item" id="rr-req-leg" style="display:none"><div class="rr-leg-dot" style="background:#ff6644;border-top:2px dashed #ff6644;height:0"></div>Required rate</div>
+    </div>
+    <canvas id="rr-canvas" style="max-height:480px"></canvas>
+  </div>
+
+  <div class="rr-overs" id="rr-overs"></div>
+</div>
+
+<script>
+let chart=null;
+
+function initChart(){
+  const ctx=document.getElementById('rr-canvas').getContext('2d');
+  chart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:[],
+      datasets:[
+        {
+          label:'Runs per over',data:[],order:2,
+          backgroundColor:(ctx)=>{
+            const v=ctx.parsed?.y||0;
+            return v>=12?'rgba(68,204,136,.8)':v<=3?'rgba(255,68,102,.7)':'rgba(68,136,255,.75)';
+          },
+          borderColor:(ctx)=>{
+            const v=ctx.parsed?.y||0;
+            return v>=12?'#44cc88':v<=3?'#ff4466':'#4488ff';
+          },
+          borderWidth:1,borderRadius:3,
+        },
+        {
+          label:'Required rate',data:[],type:'line',order:1,
+          borderColor:'#ff6644',backgroundColor:'rgba(255,102,68,.08)',
+          borderWidth:2.5,borderDash:[6,4],pointRadius:0,fill:false,tension:.3,
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(13,27,46,.95)',
+          titleColor:'#00e5ff',bodyColor:'#fff',
+          borderColor:'rgba(68,136,255,.3)',borderWidth:1,
+          titleFont:{family:'Barlow Condensed',weight:'700',size:13},
+          bodyFont:{family:'Barlow Condensed',size:14},
+        }
+      },
+      scales:{
+        x:{ticks:{color:'rgba(255,255,255,.45)',font:{family:'Barlow Condensed',weight:'600',size:13}},grid:{color:'rgba(255,255,255,.05)'},border:{color:'rgba(255,255,255,.1)'}},
+        y:{ticks:{color:'rgba(255,255,255,.45)',font:{family:'Barlow Condensed',size:13}},grid:{color:'rgba(255,255,255,.06)'},border:{color:'rgba(255,255,255,.1)'},beginAtZero:true}
+      },
+      animation:{duration:350}
+    }
+  });
+}
+
+function ws(){const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();}
+function g(id){return document.getElementById(id);}
+function show(id){g(id).style.display='';}
+function hide(id){g(id).style.display='none';}
+
+function render(S){
+  if(!S||!S.innings.length||S.status==='setup'||!chart)return;
+  const inn=S.innings[S.currentInnings-1];if(!inn)return;
+  const m=S.match;
+  const battTeam=m[inn.battingTeamKey];
+
+  g('rr-head').style.borderBottomColor=battTeam.color||'#2a5ba8';
+  g('rr-team').textContent=battTeam.name.toUpperCase();
+  g('rr-score').textContent=`${inn.score}/${inn.wickets}`;
+  const balls=inn.oversCompleted*6+inn.currentOverBalls;
+  g('rr-crr').textContent=balls>0?(inn.score/balls*6).toFixed(2):'0.00';
+
+  const hasTarget=!!inn.target;
+  if(hasTarget){
+    const bl=m.overs*6-balls,need=inn.target-inn.score;
+    g('rr-rrr').textContent=bl>0&&need>0?(need/bl*6).toFixed(2):'0.00';
+    g('rr-tgt').textContent=inn.target;
+    show('rr-rrr-div');show('rr-rrr-stat');show('rr-tgt-div');show('rr-tgt-stat');show('rr-req-leg');
+  } else {
+    hide('rr-rrr-div');hide('rr-rrr-stat');hide('rr-tgt-div');hide('rr-tgt-stat');hide('rr-req-leg');
+  }
+
+  const labels=[],runs=[],req=[];
+  let cumBalls=0;
+  inn.overHistory.forEach(o=>{
+    labels.push(`Ov ${o.n}`);runs.push(o.total);cumBalls+=6;
+    if(hasTarget){
+      const remB=m.overs*6-cumBalls;
+      const remR=inn.target-inn.overHistory.slice(0,o.n).reduce((s,ov)=>s+ov.total,0)-(inn.extras.wides+inn.extras.noBalls+inn.extras.byes+inn.extras.legByes);
+      req.push(remB>0?(remR/remB*6):0);
+    }
+  });
+  if(inn.currentOverBalls>0){
+    const partR=inn.currentOverBallHistory.reduce((s,b)=>s+b.totalRuns,0);
+    labels.push(`Ov ${inn.oversCompleted+1}*`);runs.push(partR);
+    if(hasTarget)req.push(parseFloat(g('rr-rrr')?.textContent)||0);
+  }
+
+  chart.data.labels=labels;
+  chart.data.datasets[0].data=runs;
+  chart.data.datasets[1].data=hasTarget?req:[];
+  chart.update();
+
+  // Over pills
+  g('rr-overs').innerHTML=inn.overHistory.map(o=>
+    `<div class="rr-pill"><div class="rr-pill-ov">OV ${o.n}</div><div class="rr-pill-r ${o.total>=10?'high':o.total<=3?'low':''}">${o.total}</div></div>`
+  ).join('');
+}
+
+initChart();ws();
+</script>
+</body>
+</html>

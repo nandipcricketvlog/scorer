@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.bw-wrap{
+  position:absolute;top:60px;left:60px;right:60px;
+  animation:slideIn .45s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── HEADER ── */
+.bw-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;
+  padding:0 28px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:3px solid #2a5ba8;
+}
+.bw-head-label{font-size:13px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:3px;margin-bottom:2px;}
+.bw-head-team{font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;font-family:'Barlow',sans-serif;}
+.bw-head-right{display:flex;gap:28px;align-items:center;}
+.bw-head-stat{display:flex;flex-direction:column;align-items:center;}
+.bw-head-val{font-size:28px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;line-height:1;}
+.bw-head-val.cyan{color:#00e5ff;}
+.bw-head-val.red{color:#ff4466;}
+.bw-head-val.gold{color:#ffcc00;}
+.bw-head-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;}
+.bw-head-div{width:1px;height:36px;background:rgba(255,255,255,.15);}
+
+/* ── COLUMN HEADERS ── */
+.bw-cols{
+  display:grid;grid-template-columns:240px 90px 80px 90px 90px 110px 80px 80px;
+  padding:7px 28px;
+  background:#0a1624;border-bottom:1px solid rgba(255,255,255,.12);
+}
+.bw-cols span{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:1.5px;text-align:right;
+}
+.bw-cols span:first-child{text-align:left;}
+
+/* ── ROWS ── */
+.bw-body{background:#0d1b2e;}
+.bw-row{
+  display:grid;grid-template-columns:240px 90px 80px 90px 90px 110px 80px 80px;
+  padding:10px 28px;border-bottom:1px solid rgba(255,255,255,.05);
+  align-items:center;position:relative;
+}
+.bw-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:rgba(255,255,255,.08);}
+.bw-row.active{background:rgba(0,229,255,.06);}
+.bw-row.active::before{background:#00e5ff;}
+
+.bw-name-wrap{display:flex;flex-direction:column;}
+.bw-name{font-size:20px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.5px;line-height:1.1;}
+.bw-row.active .bw-name{color:#00e5ff;}
+.bw-now{
+  font-size:10px;font-weight:800;color:#000;background:#00e5ff;
+  padding:2px 6px;border-radius:2px;display:inline-block;margin-top:3px;
+  letter-spacing:1px;width:fit-content;
+}
+.bw-cell{font-size:20px;font-weight:700;color:rgba(255,255,255,.7);text-align:right;}
+.bw-cell.overs{font-size:22px;font-weight:800;color:#fff;}
+.bw-cell.wkts{font-size:26px;font-weight:900;color:#ff4466;}
+.bw-row.active .bw-cell.wkts{color:#ff6688;}
+.bw-cell.runs{font-size:22px;font-weight:800;color:#fff;}
+.bw-cell.econ{color:#00e5ff;}
+
+/* economy bar */
+.eco-bar{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:4px;}
+.eco-fill{height:100%;border-radius:2px;transition:width .6s ease;}
+
+/* ── FOOTER ── */
+.bw-footer{
+  background:#0a1624;padding:12px 28px;
+  display:flex;gap:32px;align-items:center;
+  border-top:1px solid rgba(255,255,255,.08);
+  border-radius:0 0 6px 6px;
+}
+.bw-ft-stat{display:flex;flex-direction:column;align-items:center;}
+.bw-ft-val{font-size:22px;font-weight:900;color:#00e5ff;font-family:'Barlow',sans-serif;}
+.bw-ft-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;}
+.bw-ft-div{width:1px;height:28px;background:rgba(255,255,255,.1);}
+.bw-ft-best{margin-left:auto;font-size:14px;font-weight:700;color:rgba(255,255,255,.45);}
+.bw-ft-best strong{color:#ffcc00;font-size:18px;}
+
+.bw-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+</style>
+</head>
+<body>
+<div class="bw-wrap">
+  <div class="bw-head" id="bw-head">
+    <div>
+      <div class="bw-head-label">Bowling Analysis</div>
+      <div class="bw-head-team" id="bw-bowl-team">—</div>
+    </div>
+    <div class="bw-head-right">
+      <div class="bw-head-stat"><div class="bw-head-val cyan" id="bw-crr">0.00</div><div class="bw-head-lbl">CRR</div></div>
+      <div class="bw-head-div"></div>
+      <div class="bw-head-stat"><div class="bw-head-val" id="bw-total">0/0</div><div class="bw-head-lbl">Score</div></div>
+      <div class="bw-head-div"></div>
+      <div class="bw-head-stat"><div class="bw-head-val gold" id="bw-overs-done">0.0</div><div class="bw-head-lbl">Overs</div></div>
+    </div>
+  </div>
+  <div class="bw-accent"></div>
+
+  <div class="bw-cols">
+    <span>BOWLER</span><span>OVERS</span><span>M</span><span>RUNS</span><span>WKTS</span><span>ECONOMY</span><span>WD</span><span>NB</span>
+  </div>
+
+  <div class="bw-body" id="bw-rows"></div>
+
+  <div class="bw-footer">
+    <div class="bw-ft-stat"><div class="bw-ft-val" id="bw-ft-wkts">0</div><div class="bw-ft-lbl">Wickets</div></div>
+    <div class="bw-ft-div"></div>
+    <div class="bw-ft-stat"><div class="bw-ft-val" id="bw-ft-extras">0</div><div class="bw-ft-lbl">Extras</div></div>
+    <div class="bw-ft-div"></div>
+    <div class="bw-ft-stat"><div class="bw-ft-val" id="bw-ft-maid">0</div><div class="bw-ft-lbl">Maidens</div></div>
+    <div class="bw-ft-best" id="bw-ft-best"></div>
+  </div>
+</div>
+
+<script>
+function ws(){
+  const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};
+  w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();
+}
+
+function render(S){
+  if(!S||!S.innings.length||S.status==='setup')return;
+  const inn=S.innings[S.currentInnings-1];
+  if(!inn)return;
+  const m=S.match;
+  const bowlTeam=m[inn.bowlingTeamKey];
+
+  document.getElementById('bw-bowl-team').textContent=bowlTeam.name.toUpperCase();
+  document.getElementById('bw-head').style.borderBottomColor=bowlTeam.color||'#2a5ba8';
+
+  const balls=inn.oversCompleted*6+inn.currentOverBalls;
+  const crr=balls>0?(inn.score/balls*6).toFixed(2):'0.00';
+  document.getElementById('bw-crr').textContent=crr;
+  document.getElementById('bw-total').textContent=`${inn.score}/${inn.wickets}`;
+  document.getElementById('bw-overs-done').textContent=`${inn.oversCompleted}.${inn.currentOverBalls}`;
+
+  const maxEco=16;
+  let html='',bestW=0,bestR=999,bestStr='—',totalMaid=0;
+  inn.bowlers.forEach(b=>{
+    const isCur=b.id===inn.currentBowler;
+    const ov=`${Math.floor(b.legalBalls/6)}.${b.legalBalls%6}`;
+    const eco=b.legalBalls>0?(b.runs/b.legalBalls*6).toFixed(2):'0.00';
+    const ecoNum=parseFloat(eco)||0;
+    const fillW=Math.min(100,ecoNum/maxEco*100);
+    const fillCol=ecoNum>10?'#ff4466':ecoNum>7?'#ffcc00':'#00e5ff';
+    if(b.wickets>bestW||(b.wickets===bestW&&b.runs<bestR)){bestW=b.wickets;bestR=b.runs;bestStr=`${b.wickets}/${b.runs}`;}
+    totalMaid+=b.maidens;
+    html+=`<div class="bw-row ${isCur?'active':''}">
+      <div class="bw-name-wrap">
+        <div class="bw-name">${b.name.toUpperCase()}</div>
+        ${isCur?'<div class="bw-now">BOWLING NOW</div>':''}
+      </div>
+      <div class="bw-cell overs">${ov}</div>
+      <div class="bw-cell">${b.maidens}</div>
+      <div class="bw-cell runs">${b.runs}</div>
+      <div class="bw-cell wkts">${b.wickets}</div>
+      <div class="bw-cell econ">
+        ${eco}
+        <div class="eco-bar"><div class="eco-fill" style="width:${fillW}%;background:${fillCol}"></div></div>
+      </div>
+      <div class="bw-cell">${b.wides}</div>
+      <div class="bw-cell">${b.noBalls}</div>
+    </div>`;
+  });
+  document.getElementById('bw-rows').innerHTML=html||'<div style="padding:18px 28px;color:rgba(255,255,255,.3)">No bowlers yet</div>';
+  document.getElementById('bw-ft-wkts').textContent=inn.wickets;
+  document.getElementById('bw-ft-extras').textContent=inn.extras.wides+inn.extras.noBalls+inn.extras.byes+inn.extras.legByes;
+  document.getElementById('bw-ft-maid').textContent=totalMaid;
+  document.getElementById('bw-ft-best').innerHTML=bestW>0?`Best figures: <strong>${bestStr}</strong>`:'';
+}
+ws();
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.ts-wrap{position:absolute;top:40px;left:60px;right:60px;animation:fadeIn .5s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+
+/* ── MATCH HEADER ── */
+.ts-match-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  border-bottom:3px solid #2a5ba8;
+  flex-direction:column;gap:2px;padding:0 28px;
+}
+.ts-match-title{font-size:24px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:3px;font-family:'Barlow',sans-serif;}
+.ts-match-sub{font-size:12px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:2px;}
+.ts-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── TWO TEAMS GRID ── */
+.ts-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(255,255,255,.07);}
+
+/* ── TEAM PANEL ── */
+.ts-team{background:#0d1b2e;}
+.ts-team-head{
+  height:56px;display:flex;align-items:center;gap:14px;
+  padding:0 22px;border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;overflow:hidden;
+}
+.ts-team-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;}
+.ts-team-name-block{flex:1;}
+.ts-team-name{font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;font-family:'Barlow',sans-serif;line-height:1;}
+.ts-team-sub{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;}
+.ts-status-badge{
+  font-size:11px;font-weight:800;padding:4px 10px;border-radius:2px;
+  text-transform:uppercase;letter-spacing:1.5px;
+}
+
+/* ── PLAYER ROW ── */
+.ts-player{
+  display:flex;align-items:center;gap:12px;
+  padding:8px 22px;border-bottom:1px solid rgba(255,255,255,.04);
+  position:relative;
+}
+.ts-player.at-crease{background:rgba(255,204,0,.05);}
+.ts-player.at-crease::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#ffcc00;}
+.ts-strike-dot{
+  width:8px;height:8px;border-radius:50%;background:#ffcc00;
+  box-shadow:0 0 6px #ffcc00;flex-shrink:0;margin-left:-4px;
+}
+
+.ts-num{
+  width:28px;height:28px;border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);
+  flex-shrink:0;
+}
+.ts-player.at-crease .ts-num{background:rgba(255,204,0,.15);color:#ffcc00;}
+
+.ts-player-name{
+  flex:1;font-size:18px;font-weight:800;color:#fff;
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.ts-player.at-crease .ts-player-name{color:#ffcc00;}
+
+.ts-badge{
+  font-size:10px;font-weight:800;padding:2px 6px;border-radius:2px;flex-shrink:0;
+}
+.ts-badge.cap{background:rgba(255,204,0,.18);color:#ffcc00;border:1px solid rgba(255,204,0,.3);}
+.ts-badge.wk{background:rgba(180,100,255,.18);color:#cc88ff;border:1px solid rgba(180,100,255,.3);}
+
+.ts-bat-score{
+  display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;margin-left:8px;
+}
+.ts-bat-runs{font-size:18px;font-weight:900;color:#ffcc00;line-height:1;font-family:'Barlow',sans-serif;}
+.ts-bat-detail{font-size:11px;color:rgba(255,255,255,.4);}
+
+/* ── FOOTER ── */
+.ts-footer{
+  background:#0a1624;padding:10px 22px;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-radius:0 0 6px 6px;
+  display:flex;justify-content:center;gap:32px;align-items:center;
+}
+.ts-leg{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.35);font-weight:700;}
+.ts-leg-dot{width:10px;height:10px;border-radius:50%;}
+</style>
+</head>
+<body>
+<div class="ts-wrap">
+  <div class="ts-match-head">
+    <div class="ts-match-title" id="ts-title">Playing XI</div>
+    <div class="ts-match-sub" id="ts-sub"></div>
+  </div>
+  <div class="ts-accent" id="ts-accent"></div>
+
+  <div class="ts-grid">
+    <div class="ts-team" id="ts-t1">
+      <div class="ts-team-head" id="ts-t1-head">
+        <div class="ts-team-name-block">
+          <div class="ts-team-name" id="ts-t1-name">Team 1</div>
+          <div class="ts-team-sub" id="ts-t1-short"></div>
+        </div>
+        <div class="ts-status-badge" id="ts-t1-badge" style="display:none"></div>
+      </div>
+      <div id="ts-t1-players"></div>
+    </div>
+    <div class="ts-team" id="ts-t2">
+      <div class="ts-team-head" id="ts-t2-head">
+        <div class="ts-team-name-block">
+          <div class="ts-team-name" id="ts-t2-name">Team 2</div>
+          <div class="ts-team-sub" id="ts-t2-short"></div>
+        </div>
+        <div class="ts-status-badge" id="ts-t2-badge" style="display:none"></div>
+      </div>
+      <div id="ts-t2-players"></div>
+    </div>
+  </div>
+
+  <div class="ts-footer">
+    <div class="ts-leg"><div class="ts-leg-dot" style="background:#ffcc00"></div>Batting / On strike</div>
+    <div class="ts-leg"><div class="ts-leg-dot" style="background:#ffcc00;border:1px solid #ffcc00"></div>Captain (C)</div>
+    <div class="ts-leg"><div class="ts-leg-dot" style="background:#cc88ff"></div>Wicket-keeper (WK)</div>
+  </div>
+</div>
+
+<script>
+function ws(){const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();}
+function g(id){return document.getElementById(id);}
+
+function renderPlayers(prefix,team,inn,batData){
+  const el=g(prefix+'-players');
+  const players=team.players||[];
+  let html='';
+  players.forEach((p,i)=>{
+    const bd=batData[p.id];
+    const isCrease=bd&&(p.id===inn?.onStrike||p.id===inn?.onNonStrike)&&!bd.isOut;
+    const isStrike=p.id===inn?.onStrike;
+    html+=`<div class="ts-player ${isCrease?'at-crease':''}">
+      ${isStrike&&isCrease?'<div class="ts-strike-dot"></div>':''}
+      <div class="ts-num">${i+1}</div>
+      <div class="ts-player-name">${p.name.toUpperCase()}</div>
+      ${p.isCaptain?'<div class="ts-badge cap">C</div>':''}
+      ${p.isWK?'<div class="ts-badge wk">WK</div>':''}
+      ${bd?`<div class="ts-bat-score">
+        <div class="ts-bat-runs">${bd.runs}${isCrease?'*':bd.isOut?'†':''}</div>
+        <div class="ts-bat-detail">${bd.balls}b &nbsp;${bd.fours}×4 ${bd.sixes}×6</div>
+      </div>`:''}
+    </div>`;
+  });
+  el.innerHTML=html||'<div style="padding:14px 22px;color:rgba(255,255,255,.25);font-size:14px">No players set</div>';
+}
+
+function render(S){
+  if(!S)return;
+  const m=S.match;
+  const t1=m.team1,t2=m.team2;
+  const inn=S.innings.length?S.innings[S.currentInnings-1]:null;
+
+  // Match header
+  g('ts-title').textContent=`${(t1.shortName||t1.name).toUpperCase()} vs ${(t2.shortName||t2.name).toUpperCase()}`;
+  g('ts-accent').style.background=`linear-gradient(90deg,${t1.color} 50%,${t2.color} 50%)`;
+  let sub=[];
+  if(m.toss.winner){const tw=m[m.toss.winner]?.name||'';sub.push(`${tw} won toss, elected to ${m.toss.decision}`);}
+  if(m.venue)sub.push(m.venue);
+  g('ts-sub').textContent=sub.join('  ·  ');
+
+  // Team 1
+  g('ts-t1-head').style.cssText+=`;--stripe:${t1.color}`;
+  g('ts-t1-head').style.setProperty('--stripe',t1.color);
+  document.querySelector('#ts-t1-head::before') // can't do this via JS directly
+  g('ts-t1-head').style.borderLeft=`5px solid ${t1.color}`;
+  g('ts-t1-name').textContent=t1.name.toUpperCase();
+  g('ts-t1-short').textContent=t1.shortName||'';
+
+  // Team 2
+  g('ts-t2-head').style.borderLeft=`5px solid ${t2.color}`;
+  g('ts-t2-name').textContent=t2.name.toUpperCase();
+  g('ts-t2-short').textContent=t2.shortName||'';
+
+  // Status badges
+  const battKey=inn?.battingTeamKey;
+  ['team1','team2'].forEach((tk,i)=>{
+    const pfx=`ts-t${i+1}`;
+    const badge=g(pfx+'-badge');
+    const isBat=battKey===tk;
+    if(battKey){
+      badge.style.display='';
+      badge.textContent=isBat?'BATTING':'FIELDING';
+      badge.style.background=isBat?'rgba(68,204,136,.2)':'rgba(255,255,255,.08)';
+      badge.style.color=isBat?'#44cc88':'rgba(255,255,255,.4)';
+      badge.style.border=isBat?'1px solid rgba(68,204,136,.4)':'1px solid rgba(255,255,255,.12)';
+    } else {
+      badge.style.display='none';
+    }
+  });
+
+  // Batting data
+  const batData={};
+  if(inn)inn.batsmen.forEach(b=>batData[b.id]=b);
+
+  renderPlayers('ts-t1',t1,inn,batData);
+  renderPlayers('ts-t2',t2,inn,batData);
+}
+ws();
+</script>
+</body>
+</html>

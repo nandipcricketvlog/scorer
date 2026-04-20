@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.sc-wrap{
+  position:absolute;top:40px;left:60px;right:60px;
+  animation:fadeIn .5s ease both;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HEADER ── */
+.sc-head{
+  background:linear-gradient(135deg,#1a3a6b 0%,#0d2244 100%);
+  border-radius:6px 6px 0 0;
+  padding:0 28px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:3px solid #2a5ba8;
+}
+.sc-head-left{display:flex;flex-direction:column;gap:2px;}
+.sc-head-team{
+  font-size:28px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:2px;
+  font-family:'Barlow',sans-serif;line-height:1;
+}
+.sc-head-sub{font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;}
+.sc-head-score{
+  font-size:44px;font-weight:900;color:#fff;letter-spacing:-1px;
+  font-family:'Barlow',sans-serif;line-height:1;
+}
+.sc-head-overs{font-size:14px;font-weight:600;color:rgba(255,255,255,.55);margin-top:2px;text-align:right;}
+
+/* ── ACCENT BAR ── */
+.sc-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── BATTING TABLE ── */
+.sc-batting{background:#0d1b2e;}
+.sc-col-head{
+  display:grid;grid-template-columns:220px 1fr 70px 70px 60px 60px 80px;
+  padding:6px 24px;background:rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.sc-col-head span{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.45);
+  text-transform:uppercase;letter-spacing:1.5px;text-align:right;
+}
+.sc-col-head span:first-child,.sc-col-head span:nth-child(2){text-align:left;}
+
+.sc-bat-row{
+  display:grid;grid-template-columns:220px 1fr 70px 70px 60px 60px 80px;
+  padding:7px 24px;border-bottom:1px solid rgba(255,255,255,.05);
+  align-items:center;transition:background .2s;
+}
+.sc-bat-row.at-crease{background:rgba(255,204,0,.06);}
+.sc-bat-row.dismissed{opacity:.6;}
+.sc-bat-row:hover{background:rgba(255,255,255,.03);}
+
+.sc-bat-name{
+  font-size:17px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.5px;
+}
+.sc-bat-row.at-crease .sc-bat-name{color:#ffcc00;}
+.sc-striker-dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#ffcc00;margin-right:7px;box-shadow:0 0 6px #ffcc00;
+}
+.sc-bat-dis{font-size:13px;color:rgba(255,255,255,.38);font-style:italic;}
+.sc-bat-cell{font-size:17px;color:rgba(255,255,255,.7);text-align:right;font-weight:600;}
+.sc-bat-cell.runs{font-size:20px;font-weight:900;color:#fff;}
+.sc-bat-row.at-crease .sc-bat-cell.runs{color:#ffcc00;}
+.sc-bat-cell.notout{color:#44cc88;font-size:13px;font-weight:700;text-align:right;}
+.sc-bat-cell.four{color:#44cc88;}
+.sc-bat-cell.six{color:#ffcc00;}
+
+/* extras + total rows */
+.sc-extras-row{
+  display:grid;grid-template-columns:220px 1fr 70px 70px 60px 60px 80px;
+  padding:6px 24px;background:rgba(255,255,255,.03);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sc-total-row{
+  display:grid;grid-template-columns:1fr auto;
+  padding:10px 24px;background:#1a3a6b;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+.sc-total-label{font-size:15px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:2px;align-self:center;}
+.sc-total-val{font-size:30px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;}
+
+/* ── BOWLING TABLE ── */
+.sc-bowling{background:#0a1624;}
+.sc-bowl-head-row{
+  display:grid;grid-template-columns:200px 70px 60px 80px 80px 100px;
+  padding:6px 24px;background:rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.sc-bowl-head-row span{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:1.5px;text-align:right;
+}
+.sc-bowl-head-row span:first-child{text-align:left;}
+
+.sc-bowl-row{
+  display:grid;grid-template-columns:200px 70px 60px 80px 80px 100px;
+  padding:7px 24px;border-bottom:1px solid rgba(255,255,255,.04);
+  align-items:center;
+}
+.sc-bowl-row.bowling-now{background:rgba(0,200,255,.07);}
+.sc-bowl-name{font-size:17px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.4px;}
+.sc-bowl-row.bowling-now .sc-bowl-name{color:#00e5ff;}
+.sc-bowl-cell{font-size:17px;font-weight:600;color:rgba(255,255,255,.65);text-align:right;}
+.sc-bowl-cell.wkts{font-size:20px;font-weight:900;color:#ff4466;}
+.sc-bowl-cell.econ{color:#00e5ff;}
+
+/* ── FOW ── */
+.sc-fow{
+  background:#0d1b2e;padding:8px 24px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.sc-fow-label{font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.sc-fow-items{display:flex;flex-wrap:wrap;gap:12px;}
+.sc-fow-item{font-size:13px;color:rgba(255,255,255,.55);}
+.sc-fow-item strong{color:#fff;}
+
+/* ── BOTTOM ROUND ── */
+.sc-bottom{height:4px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);border-radius:0 0 6px 6px;}
+</style>
+</head>
+<body>
+<div class="sc-wrap" id="sc-wrap">
+
+  <!-- Header -->
+  <div class="sc-head" id="sc-head">
+    <div class="sc-head-left">
+      <div class="sc-head-team" id="sc-team">TEAM</div>
+      <div class="sc-head-sub" id="sc-sub">1st Innings</div>
+    </div>
+    <div style="text-align:right">
+      <div class="sc-head-score" id="sc-score">0/0</div>
+      <div class="sc-head-overs" id="sc-overs">0.0 overs</div>
+    </div>
+  </div>
+  <div class="sc-accent"></div>
+
+  <!-- Batting -->
+  <div class="sc-batting">
+    <div class="sc-col-head">
+      <span>BATSMAN</span><span>DISMISSAL</span>
+      <span>R</span><span>B</span><span>4s</span><span>6s</span><span>SR</span>
+    </div>
+    <div id="sc-bat-rows"></div>
+  </div>
+
+  <!-- Bowling -->
+  <div class="sc-bowling">
+    <div class="sc-bowl-head-row">
+      <span>BOWLER</span><span>O</span><span>M</span><span>R</span><span>W</span><span>ECON</span>
+    </div>
+    <div id="sc-bowl-rows"></div>
+  </div>
+
+  <!-- FOW -->
+  <div class="sc-fow" id="sc-fow">
+    <div class="sc-fow-label">Fall of Wickets</div>
+    <div class="sc-fow-items" id="sc-fow-items"></div>
+  </div>
+
+  <div class="sc-bottom"></div>
+</div>
+
+<script>
+function ws(){
+  const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};
+  w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();
+}
+
+function dis(d,allP){
+  if(!d)return'<span class="sc-bat-cell notout">not out</span>';
+  const b=allP.find(p=>p.id===d.bowlerId)?.name||'';
+  const f=allP.find(p=>p.id===d.fielderId)?.name||'';
+  const map={bowled:`b ${b}`,caught:`c ${f} b ${b}`,lbw:`lbw b ${b}`,
+    runout:`run out (${f})`,stumped:`st ${f} b ${b}`,hitwicket:`hit wicket b ${b}`,
+    obstructing:'obstructing',handled:'handled ball',timedout:'timed out'};
+  return `<span class="sc-bat-dis">${map[d.how]||d.how}</span>`;
+}
+
+function render(S){
+  if(!S||!S.innings.length)return;
+  const inn=S.innings[S.currentInnings-1];
+  if(!inn)return;
+  const m=S.match;
+  const allP=[...(m.team1.players||[]),...(m.team2.players||[])];
+  const battTeam=m[inn.battingTeamKey];
+  const te=inn.extras;
+  const totalExtras=te.wides+te.noBalls+te.byes+te.legByes;
+
+  // Header
+  document.getElementById('sc-head').style.borderBottomColor=battTeam.color||'#2a5ba8';
+  document.getElementById('sc-team').textContent=battTeam.name.toUpperCase();
+  document.getElementById('sc-sub').textContent=`${S.currentInnings===1?'1st':'2nd'} Innings${inn.target?` | Target: ${inn.target}`:''}`;
+  document.getElementById('sc-score').textContent=`${inn.score}/${inn.wickets}`;
+  document.getElementById('sc-overs').textContent=`${inn.oversCompleted}.${inn.currentOverBalls} / ${m.overs} overs`;
+
+  // Batting rows
+  let bHtml='';
+  inn.batsmen.forEach(b=>{
+    const isStrike=b.id===inn.onStrike;
+    const isCrease=b.id===inn.onStrike||b.id===inn.onNonStrike;
+    const active=isCrease&&!b.isOut;
+    const sr=b.balls>0?(b.runs/b.balls*100).toFixed(1):'—';
+    bHtml+=`<div class="sc-bat-row ${active?'at-crease':b.isOut?'dismissed':''}">
+      <div class="sc-bat-name">${isStrike&&active?'<span class="sc-striker-dot"></span>':''}${b.name.toUpperCase()}</div>
+      <div>${dis(b.dismissal,allP)}</div>
+      <div class="sc-bat-cell runs">${b.runs}</div>
+      <div class="sc-bat-cell">${b.balls}</div>
+      <div class="sc-bat-cell four">${b.fours}</div>
+      <div class="sc-bat-cell six">${b.sixes}</div>
+      <div class="sc-bat-cell">${sr}</div>
+    </div>`;
+  });
+  bHtml+=`<div class="sc-extras-row">
+    <div class="sc-bat-name" style="color:rgba(255,255,255,.5);font-size:14px">EXTRAS</div>
+    <div class="sc-bat-dis" style="align-self:center">(w ${te.wides}, nb ${te.noBalls}, b ${te.byes}, lb ${te.legByes})</div>
+    <div class="sc-bat-cell runs" style="font-size:17px;color:rgba(255,255,255,.6)">${totalExtras}</div>
+    <div></div><div></div><div></div><div></div>
+  </div>
+  <div class="sc-total-row">
+    <div class="sc-total-label">TOTAL</div>
+    <div class="sc-total-val">${inn.score}/${inn.wickets} &nbsp;<span style="font-size:18px;color:rgba(255,255,255,.5)">(${inn.oversCompleted}.${inn.currentOverBalls} ov)</span></div>
+  </div>`;
+  document.getElementById('sc-bat-rows').innerHTML=bHtml;
+
+  // Bowling rows
+  let bowHtml='';
+  inn.bowlers.forEach(b=>{
+    const isCur=b.id===inn.currentBowler;
+    const ov=`${Math.floor(b.legalBalls/6)}.${b.legalBalls%6}`;
+    const eco=b.legalBalls>0?(b.runs/b.legalBalls*6).toFixed(2):'—';
+    bowHtml+=`<div class="sc-bowl-row ${isCur?'bowling-now':''}">
+      <div class="sc-bowl-name">${b.name.toUpperCase()}</div>
+      <div class="sc-bowl-cell">${ov}</div>
+      <div class="sc-bowl-cell">${b.maidens}</div>
+      <div class="sc-bowl-cell">${b.runs}</div>
+      <div class="sc-bowl-cell wkts">${b.wickets}</div>
+      <div class="sc-bowl-cell econ">${eco}</div>
+    </div>`;
+  });
+  document.getElementById('sc-bowl-rows').innerHTML=bowHtml;
+
+  // FOW
+  const fow=inn.fallOfWickets;
+  if(fow.length){
+    document.getElementById('sc-fow-items').innerHTML=fow.map(f=>
+      `<div class="sc-fow-item"><strong>${f.n}-${f.score}</strong> (${f.name}, ${f.over} ov)</div>`
+    ).join('');
+  } else {
+    document.getElementById('sc-fow-items').innerHTML='<span style="color:rgba(255,255,255,.25);font-size:13px">No wickets yet</span>';
+  }
+}
+ws();
+</script>
+</body>
+</html>

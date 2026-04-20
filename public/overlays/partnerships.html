@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.pt-wrap{position:absolute;top:60px;left:60px;right:60px;animation:fadeIn .5s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HEADER ── */
+.pt-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;height:64px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  border-bottom:3px solid #2a5ba8;
+}
+.pt-head-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:3px;}
+.pt-head-title{font-size:26px;font-weight:900;color:#fff;text-transform:uppercase;margin-top:2px;font-family:'Barlow',sans-serif;}
+.pt-head-right{display:flex;gap:24px;align-items:center;}
+.pt-head-stat{display:flex;flex-direction:column;align-items:center;}
+.pt-head-val{font-size:26px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;line-height:1;}
+.pt-head-val.gold{color:#ffcc00;}
+.pt-head-val.cyan{color:#00e5ff;}
+.pt-head-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;}
+.pt-head-div{width:1px;height:34px;background:rgba(255,255,255,.15);}
+.pt-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── CURRENT PARTNERSHIP HIGHLIGHT ── */
+.pt-current{
+  background:#131f35;padding:18px 28px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:32px;
+}
+.pt-cur-label{font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.pt-cur-names{font-size:26px;font-weight:900;color:#ffcc00;text-transform:uppercase;letter-spacing:.5px;}
+.pt-cur-stats{display:flex;gap:24px;margin-left:auto;align-items:center;}
+.pt-cur-stat{display:flex;flex-direction:column;align-items:center;}
+.pt-cur-val{font-size:44px;font-weight:900;color:#ffcc00;line-height:1;font-family:'Barlow',sans-serif;}
+.pt-cur-val.cyan{color:#00e5ff;}
+.pt-cur-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;}
+.pt-cur-div{width:1px;height:48px;background:rgba(255,255,255,.1);}
+
+/* ── TABLE ── */
+.pt-cols{
+  display:grid;grid-template-columns:64px 1fr 90px 80px 90px;
+  padding:6px 24px;background:#0a1624;border-bottom:1px solid rgba(255,255,255,.1);
+}
+.pt-cols span{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;
+  text-align:right;
+}
+.pt-cols span:nth-child(2){text-align:left;}
+
+.pt-rows{background:#0d1b2e;}
+.pt-row{
+  display:grid;grid-template-columns:64px 1fr 90px 80px 90px;
+  padding:10px 24px;border-bottom:1px solid rgba(255,255,255,.04);
+  align-items:center;
+}
+.pt-row.active{background:rgba(255,204,0,.05);}
+
+.pt-wkt{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);
+  border:2px solid rgba(255,255,255,.12);
+}
+.pt-row.active .pt-wkt{background:rgba(255,204,0,.15);color:#ffcc00;border-color:#ffcc00;}
+
+.pt-names-block{padding-right:16px;}
+.pt-names{font-size:19px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.4px;line-height:1.1;}
+.pt-row.active .pt-names{color:#ffcc00;}
+.pt-fow-sub{font-size:12px;color:rgba(255,255,255,.35);margin-top:2px;}
+
+/* bar */
+.pt-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:5px;overflow:hidden;}
+.pt-bar-fill{height:100%;border-radius:2px;background:#2a5ba8;transition:width .6s ease;}
+.pt-row.active .pt-bar-fill{background:#ffcc00;}
+
+.pt-cell{font-size:20px;font-weight:700;color:rgba(255,255,255,.7);text-align:right;}
+.pt-cell.runs{font-size:24px;font-weight:900;color:#fff;}
+.pt-row.active .pt-cell.runs{color:#ffcc00;}
+.pt-cell.rpo{color:#00e5ff;}
+
+/* ── FOOTER ── */
+.pt-footer{
+  background:#0a1624;padding:12px 28px;border-top:1px solid rgba(255,255,255,.07);
+  border-radius:0 0 6px 6px;display:flex;gap:28px;align-items:center;
+}
+.pt-ft-stat{display:flex;align-items:baseline;gap:6px;}
+.pt-ft-val{font-size:20px;font-weight:900;color:#00e5ff;font-family:'Barlow',sans-serif;}
+.pt-ft-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;}
+.pt-ft-div{width:1px;height:18px;background:rgba(255,255,255,.1);}
+</style>
+</head>
+<body>
+<div class="pt-wrap">
+  <div class="pt-head" id="pt-head">
+    <div>
+      <div class="pt-head-label">Partnerships</div>
+      <div class="pt-head-title" id="pt-batting-team">—</div>
+    </div>
+    <div class="pt-head-right">
+      <div class="pt-head-stat"><div class="pt-head-val" id="pt-score">0/0</div><div class="pt-head-lbl">Score</div></div>
+      <div class="pt-head-div"></div>
+      <div class="pt-head-stat"><div class="pt-head-val gold" id="pt-overs">0.0</div><div class="pt-head-lbl">Overs</div></div>
+    </div>
+  </div>
+  <div class="pt-accent"></div>
+
+  <!-- Current partnership -->
+  <div class="pt-current">
+    <div>
+      <div class="pt-cur-label">Current Partnership</div>
+      <div class="pt-cur-names" id="pt-cur-names">—</div>
+    </div>
+    <div class="pt-cur-stats">
+      <div class="pt-cur-stat"><div class="pt-cur-val" id="pt-cur-r">0</div><div class="pt-cur-lbl">Runs</div></div>
+      <div class="pt-cur-div"></div>
+      <div class="pt-cur-stat"><div class="pt-cur-val" id="pt-cur-b">0</div><div class="pt-cur-lbl">Balls</div></div>
+      <div class="pt-cur-div"></div>
+      <div class="pt-cur-stat"><div class="pt-cur-val cyan" id="pt-cur-rpo">0.00</div><div class="pt-cur-lbl">R/Over</div></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="pt-cols">
+    <span>WKT</span><span>BATSMEN</span><span>RUNS</span><span>BALLS</span><span>R/OV</span>
+  </div>
+  <div class="pt-rows" id="pt-rows"></div>
+
+  <!-- Footer -->
+  <div class="pt-footer">
+    <div class="pt-ft-stat"><span class="pt-ft-val" id="pt-total-parts">0</span><span class="pt-ft-lbl">Partnerships</span></div>
+    <div class="pt-ft-div"></div>
+    <div class="pt-ft-stat"><span class="pt-ft-val" id="pt-best-runs">—</span><span class="pt-ft-lbl">Best</span></div>
+  </div>
+</div>
+
+<script>
+function ws(){const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();}
+function g(id){return document.getElementById(id);}
+
+function render(S){
+  if(!S||!S.innings.length||S.status==='setup')return;
+  const inn=S.innings[S.currentInnings-1];if(!inn)return;
+  const m=S.match;
+  const battTeam=m[inn.battingTeamKey];
+
+  g('pt-head').style.borderBottomColor=battTeam.color||'#2a5ba8';
+  g('pt-batting-team').textContent=battTeam.name.toUpperCase();
+  g('pt-score').textContent=`${inn.score}/${inn.wickets}`;
+  g('pt-overs').textContent=`${inn.oversCompleted}.${inn.currentOverBalls}`;
+
+  const p=inn.currentPartnership;
+  const bs=inn.batsmen.find(b=>b.id===inn.onStrike);
+  const bns=inn.batsmen.find(b=>b.id===inn.onNonStrike);
+  if(bs&&bns)g('pt-cur-names').textContent=`${bs.name.toUpperCase()} & ${bns.name.toUpperCase()}`;
+  g('pt-cur-r').textContent=p?.runs||0;
+  g('pt-cur-b').textContent=p?.balls||0;
+  g('pt-cur-rpo').textContent=p?.balls>0?(p.runs/p.balls*6).toFixed(2):'0.00';
+
+  const allParts=[...(inn.partnerships||[])];
+  if(p&&(p.runs>0||p.balls>0))allParts.push({...p,isCurrent:true});
+  const maxR=Math.max(1,...allParts.map(pt=>pt.runs||0));
+  const fow=inn.fallOfWickets||[];
+
+  let html='';
+  allParts.forEach((pt,i)=>{
+    const wkt=i+1;
+    const b1=inn.batsmen.find(b=>b.id===pt.bat1);
+    const b2=inn.batsmen.find(b=>b.id===pt.bat2);
+    const names=b1&&b2?`${b1.name.toUpperCase()} & ${b2.name.toUpperCase()}`:`Partnership ${wkt}`;
+    const fowE=fow[i];
+    const sub=fowE?`Fall: ${fowE.score}/${fowE.n} (${fowE.over} ov)`:'';
+    const rr=pt.balls>0?(pt.runs/pt.balls*6).toFixed(2):'—';
+    const barW=Math.round((pt.runs||0)/maxR*100);
+    const cur=!!pt.isCurrent;
+    html+=`<div class="pt-row ${cur?'active':''}">
+      <div class="pt-wkt">${wkt}</div>
+      <div class="pt-names-block">
+        <div class="pt-names">${names}</div>
+        ${sub?`<div class="pt-fow-sub">${sub}</div>`:''}
+        <div class="pt-bar"><div class="pt-bar-fill" style="width:${barW}%"></div></div>
+      </div>
+      <div class="pt-cell runs">${pt.runs||0}</div>
+      <div class="pt-cell">${pt.balls||0}</div>
+      <div class="pt-cell rpo">${rr}</div>
+    </div>`;
+  });
+  g('pt-rows').innerHTML=html||'<div style="padding:16px 28px;color:rgba(255,255,255,.3)">No partnerships yet</div>';
+
+  g('pt-total-parts').textContent=allParts.length;
+  const best=allParts.reduce((mx,pt)=>(pt.runs||0)>(mx||0)?pt.runs:mx,0);
+  g('pt-best-runs').textContent=best>0?`${best} runs`:'—';
+}
+ws();
+</script>
+</body>
+</html>

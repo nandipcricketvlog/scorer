@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:transparent!important; overflow:hidden; width:1920px; height:1080px; }
+.ov {
+  position:absolute; inset:0; width:1920px; height:1080px;
+  border:none; background:transparent;
+  display:none;
+}
+.ov.active { display:block; }
+</style>
+</head>
+<body>
+  <iframe class="ov active" id="ov-lower-third"   src="/overlays/lower-third.html"   allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-scorecard"      src="/overlays/scorecard.html"      allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-batsmen"        src="/overlays/batsmen.html"        allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-bowling"        src="/overlays/bowling.html"        allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-runrate"        src="/overlays/runrate.html"        allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-partnerships"   src="/overlays/partnerships.html"   allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-teamsheet"      src="/overlays/teamsheet.html"      allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-chase"          src="/overlays/chase.html"          allowtransparency="true"></iframe>
+  <iframe class="ov"        id="ov-summary"        src="/overlays/summary.html"        allowtransparency="true"></iframe>
+
+<script>
+let current = 'lower-third';
+
+function switchOverlay(name) {
+  if (name === current) return;
+  const prev = document.getElementById('ov-' + current);
+  const next = document.getElementById('ov-' + name);
+  if (prev) prev.classList.remove('active');
+  if (next) { next.classList.add('active'); current = name; }
+}
+
+function connect() {
+  const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  ws.onmessage = e => {
+    const { type, payload } = JSON.parse(e.data);
+    if (type === 'state') {
+      const name = payload.match?.activeOverlay || 'lower-third';
+      switchOverlay(name);
+    }
+  };
+  ws.onclose = () => setTimeout(connect, 3000);
+  ws.onerror  = () => ws.close();
+}
+
+connect();
+</script>
+</body>
+</html>

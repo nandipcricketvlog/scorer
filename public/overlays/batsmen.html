@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.bat-wrap{
+  position:absolute;top:80px;left:60px;right:60px;
+  animation:slideIn .45s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HEADER BAR ── */
+.bat-head{
+  background:linear-gradient(135deg,#1a3a6b,#0d2244);
+  border-radius:6px 6px 0 0;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;border-bottom:3px solid #2a5ba8;
+}
+.bat-head-label{font-size:14px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:3px;}
+.bat-head-score{font-size:28px;font-weight:900;color:#fff;font-family:'Barlow',sans-serif;}
+.bat-head-overs{font-size:14px;color:rgba(255,255,255,.4);margin-left:12px;}
+
+.bat-accent{height:3px;background:linear-gradient(90deg,#2a5ba8,#4488ff,#2a5ba8);}
+
+/* ── TWO-COLUMN GRID ── */
+.bat-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#0d1b2e;}
+
+.bat-card{
+  background:#0d1b2e;padding:28px 36px;
+  position:relative;overflow:hidden;
+}
+.bat-card.striker{background:#131f35;}
+.bat-card.striker::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;background:#ffcc00;
+}
+.bat-card.nonstriker::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;background:#2a5ba8;
+}
+
+/* bg watermark */
+.bat-bg-num{
+  position:absolute;right:12px;bottom:-20px;
+  font-size:160px;font-weight:900;color:rgba(255,255,255,.03);
+  font-family:'Barlow',sans-serif;line-height:1;pointer-events:none;user-select:none;
+}
+
+.bat-role{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.35);
+  text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;
+}
+.bat-card.striker .bat-role{color:#ffcc00;}
+
+.bat-name{
+  font-size:36px;font-weight:900;color:#fff;text-transform:uppercase;
+  line-height:1;letter-spacing:.5px;margin-bottom:12px;
+}
+.bat-card.striker .bat-name{color:#ffcc00;}
+
+/* big score */
+.bat-score-row{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
+.bat-runs{
+  font-size:88px;font-weight:900;color:#fff;line-height:1;
+  font-family:'Barlow',sans-serif;
+}
+.bat-card.striker .bat-runs{color:#ffcc00;}
+.bat-balls-block{display:flex;flex-direction:column;}
+.bat-balls-lbl{font-size:12px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;}
+.bat-balls-val{font-size:44px;font-weight:800;color:rgba(255,255,255,.55);font-family:'Barlow',sans-serif;line-height:1;}
+
+/* stat pills row */
+.bat-stats{display:flex;gap:24px;align-items:flex-end;}
+.bat-stat{display:flex;flex-direction:column;align-items:center;}
+.bat-stat-val{font-size:36px;font-weight:900;line-height:1;font-family:'Barlow',sans-serif;}
+.bat-stat-val.fours{color:#44cc88;}
+.bat-stat-val.sixes{color:#ffcc00;}
+.bat-stat-val.sr{color:#00e5ff;}
+.bat-stat-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;}
+
+/* ── PARTNERSHIP FOOTER ── */
+.bat-partner{
+  background:#0a1624;padding:14px 28px;
+  display:flex;align-items:center;gap:32px;
+  border-top:1px solid rgba(255,255,255,.07);
+  border-radius:0 0 6px 6px;
+}
+.bat-partner-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;}
+.bat-partner-stat{display:flex;flex-direction:column;align-items:center;}
+.bat-partner-val{font-size:26px;font-weight:900;color:#00e5ff;font-family:'Barlow',sans-serif;line-height:1;}
+.bat-partner-lbl{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;}
+.bat-partner-div{width:1px;height:28px;background:rgba(255,255,255,.1);}
+</style>
+</head>
+<body>
+<div class="bat-wrap">
+  <div class="bat-head" id="bat-head">
+    <div class="bat-head-label">At the Crease</div>
+    <div style="display:flex;align-items:center">
+      <div class="bat-head-score" id="bat-score">0/0</div>
+      <div class="bat-head-overs" id="bat-overs">&nbsp;(0.0 ov)</div>
+    </div>
+  </div>
+  <div class="bat-accent"></div>
+
+  <div class="bat-grid">
+    <!-- Striker -->
+    <div class="bat-card striker">
+      <div class="bat-bg-num" id="bs-bg">0</div>
+      <div class="bat-role">★ ON STRIKE</div>
+      <div class="bat-name" id="bs-name">—</div>
+      <div class="bat-score-row">
+        <div class="bat-runs" id="bs-runs">0</div>
+        <div class="bat-balls-block">
+          <div class="bat-balls-lbl">balls</div>
+          <div class="bat-balls-val" id="bs-balls">0</div>
+        </div>
+      </div>
+      <div class="bat-stats">
+        <div class="bat-stat"><div class="bat-stat-val fours" id="bs-4s">0</div><div class="bat-stat-lbl">Fours</div></div>
+        <div class="bat-stat"><div class="bat-stat-val sixes" id="bs-6s">0</div><div class="bat-stat-lbl">Sixes</div></div>
+        <div class="bat-stat"><div class="bat-stat-val sr" id="bs-sr">0.0</div><div class="bat-stat-lbl">Strike Rate</div></div>
+      </div>
+    </div>
+
+    <!-- Non-striker -->
+    <div class="bat-card nonstriker">
+      <div class="bat-bg-num" id="bns-bg">0</div>
+      <div class="bat-role">NON-STRIKER</div>
+      <div class="bat-name" id="bns-name">—</div>
+      <div class="bat-score-row">
+        <div class="bat-runs" id="bns-runs">0</div>
+        <div class="bat-balls-block">
+          <div class="bat-balls-lbl">balls</div>
+          <div class="bat-balls-val" id="bns-balls">0</div>
+        </div>
+      </div>
+      <div class="bat-stats">
+        <div class="bat-stat"><div class="bat-stat-val fours" id="bns-4s">0</div><div class="bat-stat-lbl">Fours</div></div>
+        <div class="bat-stat"><div class="bat-stat-val sixes" id="bns-6s">0</div><div class="bat-stat-lbl">Sixes</div></div>
+        <div class="bat-stat"><div class="bat-stat-val sr" id="bns-sr">0.0</div><div class="bat-stat-lbl">Strike Rate</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partnership -->
+  <div class="bat-partner">
+    <div class="bat-partner-label">Current Partnership</div>
+    <div class="bat-partner-stat"><div class="bat-partner-val" id="part-r">0</div><div class="bat-partner-lbl">Runs</div></div>
+    <div class="bat-partner-div"></div>
+    <div class="bat-partner-stat"><div class="bat-partner-val" id="part-b">0</div><div class="bat-partner-lbl">Balls</div></div>
+    <div class="bat-partner-div"></div>
+    <div class="bat-partner-stat"><div class="bat-partner-val" id="part-rpo" style="color:#ffcc00">0.00</div><div class="bat-partner-lbl">R/Over</div></div>
+  </div>
+</div>
+
+<script>
+function ws(){
+  const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};
+  w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();
+}
+function sr(b){return b.balls>0?(b.runs/b.balls*100).toFixed(1):'0.0';}
+function g(id){return document.getElementById(id);}
+
+function render(S){
+  if(!S||!S.innings.length||S.status==='setup')return;
+  const inn=S.innings[S.currentInnings-1];
+  if(!inn)return;
+  const m=S.match;
+  const battTeam=m[inn.battingTeamKey];
+
+  g('bat-head').style.borderBottomColor=battTeam.color||'#2a5ba8';
+  g('bat-score').textContent=`${inn.score}/${inn.wickets}`;
+  g('bat-overs').textContent=`(${inn.oversCompleted}.${inn.currentOverBalls} ov)`;
+
+  const bs=inn.batsmen.find(b=>b.id===inn.onStrike);
+  const bns=inn.batsmen.find(b=>b.id===inn.onNonStrike);
+
+  if(bs){
+    g('bs-name').textContent=bs.name.toUpperCase();
+    g('bs-runs').textContent=bs.runs; g('bs-balls').textContent=bs.balls;
+    g('bs-4s').textContent=bs.fours; g('bs-6s').textContent=bs.sixes;
+    g('bs-sr').textContent=sr(bs); g('bs-bg').textContent=bs.runs;
+  }
+  if(bns){
+    g('bns-name').textContent=bns.name.toUpperCase();
+    g('bns-runs').textContent=bns.runs; g('bns-balls').textContent=bns.balls;
+    g('bns-4s').textContent=bns.fours; g('bns-6s').textContent=bns.sixes;
+    g('bns-sr').textContent=sr(bns); g('bns-bg').textContent=bns.runs;
+  }
+
+  const p=inn.currentPartnership;
+  if(p){
+    g('part-r').textContent=p.runs; g('part-b').textContent=p.balls;
+    g('part-rpo').textContent=p.balls>0?(p.runs/p.balls*6).toFixed(2):'0.00';
+  }
+}
+ws();
+</script>
+</body>
+</html>

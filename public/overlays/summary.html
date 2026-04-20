@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+
+.su-wrap{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  background:#0a1420;animation:fadeIn .8s ease both;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.su-wrap.hidden{display:none!important;}
+
+/* ── RESULT BANNER ── */
+.su-banner{
+  height:112px;background:linear-gradient(135deg,#1a3a6b 0%,#0d2244 60%,#1a2a4a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  border-bottom:3px solid #4488ff;
+}
+.su-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(68,136,255,.08) 0%,transparent 50%);}
+.su-result{font-size:44px;font-weight:900;color:#ffcc00;text-transform:uppercase;letter-spacing:2px;font-family:'Barlow',sans-serif;line-height:1;z-index:1;}
+.su-venue{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-top:5px;z-index:1;}
+
+/* ── TEAM SCORES BAR ── */
+.su-scores{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(255,255,255,.07);}
+.su-team-score{
+  background:#131f35;height:72px;display:flex;align-items:center;gap:0;
+  position:relative;overflow:hidden;
+}
+.su-team-stripe{width:5px;height:100%;flex-shrink:0;}
+.su-team-name{font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;padding:0 18px;font-family:'Barlow',sans-serif;}
+.su-team-total{font-size:34px;font-weight:900;color:#fff;margin-left:auto;padding-right:18px;font-family:'Barlow',sans-serif;}
+.su-team-overs{font-size:14px;color:rgba(255,255,255,.4);padding-right:18px;align-self:flex-end;padding-bottom:6px;}
+
+/* ── SCORECARDS GRID ── */
+.su-cards{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(255,255,255,.07);min-height:0;}
+.su-card{background:#0d1b2e;display:flex;flex-direction:column;overflow:hidden;}
+.su-card-head{
+  background:#0a1624;padding:7px 20px;border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.su-card-title{font-size:11px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;}
+.su-card-team{font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;}
+
+/* table */
+.su-tbl{width:100%;border-collapse:collapse;font-size:14px;}
+.su-tbl th{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;padding:4px 10px;text-align:right;border-bottom:1px solid rgba(255,255,255,.07);}
+.su-tbl th:first-child{text-align:left;}
+.su-tbl td{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);text-align:right;color:rgba(255,255,255,.65);}
+.su-tbl td:first-child{text-align:left;color:#fff;font-weight:700;font-size:15px;}
+.su-tbl tr.top-bat td:first-child{color:#ffcc00;}
+.su-tbl tr.top-bat td.runs{color:#ffcc00!important;font-weight:900;}
+.su-tbl tr.top-bow td:first-child{color:#00e5ff;}
+.su-tbl td.runs{font-size:17px;font-weight:900;color:#fff;}
+.su-tbl td.wkts{font-size:17px;font-weight:900;color:#ff4466;}
+.su-tbl tr.top-bow td.wkts{color:#ff4466!important;}
+.su-tbl td.notout{color:#44cc88;font-size:12px;}
+.su-tbl .extras-row td{color:rgba(255,255,255,.35);font-size:12px;}
+.su-tbl .total-row td{font-weight:900;color:#fff!important;font-size:16px;border-top:1px solid rgba(255,255,255,.1);background:rgba(68,136,255,.07);}
+
+/* ── HONOURS ── */
+.su-honours{
+  background:#0a1624;height:80px;display:flex;align-items:center;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.su-honour{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.07);}
+.su-honour:last-child{border-right:none;}
+.su-hon-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:3px;}
+.su-hon-name{font-size:18px;font-weight:900;color:#ffcc00;text-transform:uppercase;line-height:1;}
+.su-hon-val{font-size:13px;font-weight:700;color:#00e5ff;}
+</style>
+</head>
+<body>
+<div class="su-wrap hidden" id="su-wrap">
+  <!-- Result -->
+  <div class="su-banner">
+    <div class="su-result" id="su-result">Match Complete</div>
+    <div class="su-venue" id="su-venue"></div>
+  </div>
+
+  <!-- Scores -->
+  <div class="su-scores">
+    <div class="su-team-score">
+      <div class="su-team-stripe" id="su-t1-stripe"></div>
+      <div class="su-team-name" id="su-t1-name">Team 1</div>
+      <div class="su-team-total" id="su-t1-score">—</div>
+      <div class="su-team-overs" id="su-t1-overs"></div>
+    </div>
+    <div class="su-team-score">
+      <div class="su-team-stripe" id="su-t2-stripe"></div>
+      <div class="su-team-name" id="su-t2-name">Team 2</div>
+      <div class="su-team-total" id="su-t2-score">—</div>
+      <div class="su-team-overs" id="su-t2-overs"></div>
+    </div>
+  </div>
+
+  <!-- Scorecards -->
+  <div class="su-cards">
+    <div class="su-card">
+      <div class="su-card-head"><div class="su-card-title" id="su-bat1-title">Batting</div><div class="su-card-team" id="su-bat1-team"></div></div>
+      <table class="su-tbl"><thead><tr><th>Batsman</th><th>Dismissal</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead><tbody id="su-bat1-rows"></tbody></table>
+    </div>
+    <div class="su-card">
+      <div class="su-card-head"><div class="su-card-title" id="su-bat2-title">Batting</div><div class="su-card-team" id="su-bat2-team"></div></div>
+      <table class="su-tbl"><thead><tr><th>Batsman</th><th>Dismissal</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead><tbody id="su-bat2-rows"></tbody></table>
+    </div>
+    <div class="su-card">
+      <div class="su-card-head"><div class="su-card-title" id="su-bow1-title">Bowling</div><div class="su-card-team" id="su-bow1-team"></div></div>
+      <table class="su-tbl"><thead><tr><th>Bowler</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Econ</th></tr></thead><tbody id="su-bow1-rows"></tbody></table>
+    </div>
+    <div class="su-card">
+      <div class="su-card-head"><div class="su-card-title" id="su-bow2-title">Bowling</div><div class="su-card-team" id="su-bow2-team"></div></div>
+      <table class="su-tbl"><thead><tr><th>Bowler</th><th>O</th><th>M</th><th>R</th><th>W</th><th>Econ</th></tr></thead><tbody id="su-bow2-rows"></tbody></table>
+    </div>
+  </div>
+
+  <!-- Honours -->
+  <div class="su-honours">
+    <div class="su-honour"><div class="su-hon-lbl">Top Scorer</div><div class="su-hon-name" id="su-top-bat">—</div><div class="su-hon-val" id="su-top-bat-v"></div></div>
+    <div class="su-honour"><div class="su-hon-lbl">Best Bowler</div><div class="su-hon-name" id="su-top-bow">—</div><div class="su-hon-val" id="su-top-bow-v"></div></div>
+    <div class="su-honour"><div class="su-hon-lbl">Best Partnership</div><div class="su-hon-name" id="su-top-part">—</div><div class="su-hon-val" id="su-top-part-v"></div></div>
+    <div class="su-honour"><div class="su-hon-lbl">Total Sixes</div><div class="su-hon-name" id="su-sixes" style="font-size:32px">0</div><div class="su-hon-val"></div></div>
+    <div class="su-honour"><div class="su-hon-lbl">Total Fours</div><div class="su-hon-name" id="su-fours" style="font-size:32px">0</div><div class="su-hon-val"></div></div>
+  </div>
+</div>
+
+<script>
+function ws(){const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);w.onmessage=e=>{const m=JSON.parse(e.data);if(m.type==='state')render(m.payload);};w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();}
+function g(id){return document.getElementById(id);}
+
+function disText(d,allP){
+  if(!d)return'<td class="notout">not out</td>';
+  const b=allP.find(p=>p.id===d.bowlerId)?.name||'';
+  const f=allP.find(p=>p.id===d.fielderId)?.name||'';
+  const map={bowled:`b ${b}`,caught:`c ${f} b ${b}`,lbw:`lbw b ${b}`,runout:`run out (${f})`,stumped:`st ${f} b ${b}`,hitwicket:`hw b ${b}`};
+  return`<td style="font-size:12px;color:rgba(255,255,255,.38);font-style:italic">${map[d.how]||d.how}</td>`;
+}
+
+function renderInn(idx,batBid,batTid,batTeamId,bowBid,bowTid,bowTeamId,allP,S){
+  const inn=S.innings[idx];
+  if(!inn){g(batBid).innerHTML='';g(bowBid).innerHTML='';return;}
+  const m=S.match;
+  const battTeam=m[inn.battingTeamKey],bowlTeam=m[inn.bowlingTeamKey];
+  g(batTid).textContent=`${idx===0?'1st':'2nd'} Innings — Batting`;
+  g(batTeamId).textContent=battTeam.name.toUpperCase();
+  g(bowTid).textContent=`${idx===0?'1st':'2nd'} Innings — Bowling`;
+  g(bowTeamId).textContent=bowlTeam.name.toUpperCase();
+
+  const sortedBat=[...inn.batsmen].sort((a,b)=>b.runs-a.runs);
+  const topBatId=sortedBat[0]?.id;
+  const te=inn.extras;
+  const totE=te.wides+te.noBalls+te.byes+te.legByes;
+
+  let bHtml='';
+  inn.batsmen.forEach(b=>{
+    const sr=b.balls>0?(b.runs/b.balls*100).toFixed(1):'—';
+    const top=b.id===topBatId;
+    bHtml+=`<tr class="${top?'top-bat':''}"><td>${b.name.toUpperCase()}</td>${disText(b.dismissal,allP)}<td class="runs">${b.runs}</td><td>${b.balls}</td><td>${b.fours}</td><td>${b.sixes}</td><td>${sr}</td></tr>`;
+  });
+  bHtml+=`<tr class="extras-row"><td>Extras</td><td style="font-size:11px">(w${te.wides} nb${te.noBalls} b${te.byes} lb${te.legByes})</td><td>${totE}</td><td colspan="4"></td></tr>`;
+  bHtml+=`<tr class="total-row"><td>TOTAL</td><td colspan="2">${inn.score}/${inn.wickets}</td><td colspan="4" style="font-size:12px;color:rgba(255,255,255,.4)">(${inn.oversCompleted}.${inn.currentOverBalls} ov)</td></tr>`;
+  g(batBid).innerHTML=bHtml;
+
+  const topBowl=[...inn.bowlers].sort((a,b)=>b.wickets-a.wickets||a.runs-b.runs)[0];
+  let bowHtml='';
+  inn.bowlers.forEach(b=>{
+    const ov=`${Math.floor(b.legalBalls/6)}.${b.legalBalls%6}`;
+    const eco=b.legalBalls>0?(b.runs/b.legalBalls*6).toFixed(2):'—';
+    const top=b.id===topBowl?.id;
+    bowHtml+=`<tr class="${top?'top-bow':''}"><td>${b.name.toUpperCase()}</td><td>${ov}</td><td>${b.maidens}</td><td>${b.runs}</td><td class="wkts">${b.wickets}</td><td style="color:#00e5ff">${eco}</td></tr>`;
+  });
+  g(bowBid).innerHTML=bowHtml||'<tr><td colspan="6" style="color:rgba(255,255,255,.3);padding:6px 10px">—</td></tr>';
+}
+
+function render(S){
+  const wrap=g('su-wrap');
+  if(!S||S.status!=='complete'||!S.innings.length){wrap.classList.add('hidden');return;}
+  wrap.classList.remove('hidden');
+  const m=S.match;
+  const inn1=S.innings[0],inn2=S.innings[1];
+  const allP=[...(m.team1.players||[]),...(m.team2.players||[])];
+
+  g('su-t1-stripe').style.background=m.team1.color;
+  g('su-t2-stripe').style.background=m.team2.color;
+  g('su-t1-name').textContent=m.team1.name.toUpperCase();
+  g('su-t2-name').textContent=m.team2.name.toUpperCase();
+
+  // Scores per team
+  [inn1,inn2].filter(Boolean).forEach(inn=>{
+    const tk=inn.battingTeamKey;
+    const pfx=tk==='team1'?'su-t1':'su-t2';
+    g(pfx+'-score').textContent=`${inn.score}/${inn.wickets}`;
+    g(pfx+'-overs').textContent=`(${inn.oversCompleted}.${inn.currentOverBalls} ov)`;
+  });
+
+  // Result
+  let res='Match Complete';
+  if(inn2){
+    const b2=m[inn2.battingTeamKey];const bo2=m[inn2.bowlingTeamKey];
+    const wl=(m.playersPerSide-1)-inn2.wickets;
+    res=inn2.score>=inn2.target?`${b2.name.toUpperCase()} WON BY ${wl} WICKET${wl!==1?'S':''}`:`${bo2.name.toUpperCase()} WON BY ${inn1.score-inn2.score} RUNS`;
+  }
+  g('su-result').textContent=res;
+  g('su-venue').textContent=[m.venue,m.date].filter(Boolean).join('  ·  ');
+
+  renderInn(0,'su-bat1-rows','su-bat1-title','su-bat1-team','su-bow1-rows','su-bow1-title','su-bow1-team',allP,S);
+  renderInn(1,'su-bat2-rows','su-bat2-title','su-bat2-team','su-bow2-rows','su-bow2-title','su-bow2-team',allP,S);
+
+  // Honours
+  const allBats=S.innings.flatMap(i=>i.batsmen);
+  const topB=[...allBats].sort((a,b2)=>b2.runs-a.runs)[0];
+  if(topB){g('su-top-bat').textContent=topB.name.toUpperCase();g('su-top-bat-v').textContent=`${topB.runs} (${topB.balls}) SR ${topB.balls>0?(topB.runs/topB.balls*100).toFixed(1):'—'}`;}
+
+  const allBowls=S.innings.flatMap(i=>i.bowlers);
+  const topBow=[...allBowls].sort((a,b2)=>b2.wickets-a.wickets||a.runs-b2.runs)[0];
+  if(topBow){g('su-top-bow').textContent=topBow.name.toUpperCase();const ov=`${Math.floor(topBow.legalBalls/6)}.${topBow.legalBalls%6}`;g('su-top-bow-v').textContent=`${topBow.wickets}/${topBow.runs} (${ov} ov)`;}
+
+  const allParts=S.innings.flatMap(i=>[...i.partnerships,...(i.currentPartnership?.runs>0?[i.currentPartnership]:[])]);
+  const topPart=[...allParts].sort((a,b2)=>b2.runs-a.runs)[0];
+  if(topPart){
+    const b1=allP.find(p=>p.id===topPart.bat1)?.name||'';
+    const b2n=allP.find(p=>p.id===topPart.bat2)?.name||'';
+    g('su-top-part').textContent=b1&&b2n?`${b1} & ${b2n}`.toUpperCase():'—';
+    g('su-top-part-v').textContent=`${topPart.runs} runs (${topPart.balls} balls)`;
+  }
+
+  let f4=0,f6=0;
+  S.innings.forEach(inn=>inn.batsmen.forEach(b=>{f4+=b.fours;f6+=b.sixes;}));
+  g('su-fours').textContent=f4;g('su-sixes').textContent=f6;
+}
+ws();
+</script>
+</body>
+</html>
