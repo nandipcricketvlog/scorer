@@ -274,15 +274,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);
 .ov-switcher{
   flex-shrink:0;background:var(--surf);
   border-top:1px solid var(--border);
-  padding:8px 12px;
+  padding:8px 12px 10px;
 }
 .ov-switcher-label{font-size:10px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:7px;}
-.ov-btns{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;}
+.ov-row{display:flex;gap:6px;margin-bottom:6px;}
+.ov-row:last-child{margin-bottom:0;}
 .ov-btn{
-  flex-shrink:0;height:36px;padding:0 12px;border-radius:4px;
+  flex:1;height:36px;padding:0 6px;border-radius:4px;
   border:1px solid var(--border);background:var(--panel);
   color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;
-  white-space:nowrap;transition:all .15s;
+  white-space:nowrap;transition:all .15s;text-align:center;
 }
 .ov-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(68,136,255,.12);}
 .ov-btn:active{opacity:.7;}
@@ -691,7 +692,9 @@ textarea:focus{outline:none;border-color:var(--accent);}
     <!-- Overlay switcher -->
     <div class="ov-switcher">
       <div class="ov-switcher-label">OBS Overlay</div>
-      <div class="ov-btns" id="ov-btns"></div>
+      <div class="ov-row" id="ov-row-1"></div>
+      <div class="ov-row" id="ov-row-2"></div>
+      <div class="ov-row" id="ov-row-3"></div>
     </div>
 
   </div>
@@ -1287,25 +1290,30 @@ function matchResultText() {
 }
 
 // ── OVERLAY SWITCHER ───────────────────────
-const OVERLAYS = [
-  { id:'lower-third',  label:'Lower Third'  },
-  { id:'scorecard',    label:'Scorecard'    },
-  { id:'batsmen',      label:'Batsmen'      },
-  { id:'bowling',      label:'Bowling'      },
-  { id:'runrate',      label:'Run Rate'     },
-  { id:'partnerships', label:'Partnerships' },
-  { id:'teamsheet',    label:'Team Sheet'   },
-  { id:'chase',        label:'Chase Meter'  },
-  { id:'summary',      label:'Summary'      },
+const OV_ROW1 = [
+  { id:'toss',        label:'Toss'      },
+  { id:'teamsheet',   label:'Team Sheet'},
+  { id:'summary',     label:'Summary'   },
 ];
+const OV_ROW2 = [
+  { id:'lower-third',  label:'Lower 3rd'   },
+  { id:'scorecard',    label:'Scorecard'   },
+  { id:'batsmen',      label:'Batsmen'     },
+];
+const OV_ROW3 = [
+  { id:'bowling',      label:'Bowling'     },
+  { id:'partnerships', label:'Partnerships'},
+  { id:'chase',        label:'Chase'       },
+];
+const OVERLAYS = [...OV_ROW1, ...OV_ROW2, ...OV_ROW3];
 
 function renderOverlaySwitcher() {
-  const active = S?.match?.activeOverlay || 'lower-third';
-  const container = g('ov-btns');
-  if (!container) return;
-  container.innerHTML = OVERLAYS.map(o =>
-    `<button class="ov-btn ${o.id===active?'active':''}" onclick="switchOverlay('${o.id}')">${o.label}</button>`
-  ).join('');
+  const active = S?.match?.activeOverlay || 'toss';
+  const btn = (o) => `<button class="ov-btn ${o.id===active?'active':''}" onclick="switchOverlay('${o.id}')">${o.label}</button>`;
+  const r1 = g('ov-row-1'); const r2 = g('ov-row-2'); const r3 = g('ov-row-3');
+  if (r1) r1.innerHTML = OV_ROW1.map(btn).join('');
+  if (r2) r2.innerHTML = OV_ROW2.map(btn).join('');
+  if (r3) r3.innerHTML = OV_ROW3.map(btn).join('');
 }
 
 async function switchOverlay(name) {

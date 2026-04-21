@@ -3,226 +3,296 @@
 <head>
 <meta charset="UTF-8">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto+Condensed:wght@400;600;700&display=swap');
 
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;
+  font-family:'Roboto Condensed',sans-serif;letter-spacing:1.5px;}
 
-/* ── OUTER WRAPPER ── */
+/* ── WRAPPER ── */
 .lt{
-  position:absolute;bottom:0;left:0;right:0;
-  animation:slideUp .4s cubic-bezier(.22,1,.36,1) both;
+  position:absolute;
+  left:0;right:0;bottom:0;   /* pinned to bottom */
+  height:100px;
+  animation:slideUp .45s cubic-bezier(.22,1,.36,1) both;
 }
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-
-/* ── THIN TOP ACCENT ── */
-.lt-accent{height:4px;}
+@keyframes slideUp{from{transform:translateY(110%);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* ── MAIN BAR ── */
-.lt-bar{
-  display:flex;align-items:stretch;height:88px;
-  background:#0d1b2e;
+.bar{
+  position:absolute;inset:0;
+  display:flex;align-items:stretch;
+  border-radius:4px;overflow:hidden;
+  box-shadow:0 4px 32px rgba(0,0,0,.6);
+}
+
+/* score flash */
+@keyframes scoreFlash{0%{filter:brightness(2.5)}100%{filter:brightness(1)}}
+.bar.flash{ animation:scoreFlash .4s ease-out; }
+
+/* ══════════════════════════════════════
+   SECTION 1 — TEAM PANEL (coloured)
+══════════════════════════════════════ */
+.s-team{
+  display:flex;align-items:center;gap:10px;
+  padding:0 14px 0 12px;min-width:200px;flex-shrink:0;
   position:relative;overflow:hidden;
 }
-/* subtle sheen */
-.lt-bar::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none;}
+/* dark overlay so text is always readable */
+.s-team::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.1) 100%);
+  pointer-events:none;
+}
+.shield{
+  width:52px;height:52px;border-radius:8px;
+  background:rgba(0,0,0,.3);border:2px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;position:relative;z-index:1;
+}
+.team-info{position:relative;z-index:1;}
+.team-name{
+  font-family:'Montserrat',sans-serif;
+  font-size:22px;font-weight:900;color:#fff;
+  text-transform:uppercase;letter-spacing:1.5px;line-height:1;white-space:nowrap;
+}
+.team-sub{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.7);
+  text-transform:uppercase;letter-spacing:2px;margin-top:3px;
+}
 
-/* score-flash */
-@keyframes flash{0%{filter:brightness(2.2)}100%{filter:brightness(1)}}
-.lt-bar.flash{animation:flash .5s ease-out forwards;}
+/* ══════════════════════════════════════
+   SECTION 2 — SCORE
+══════════════════════════════════════ */
+.s-score{
+  background:rgba(255,255,255,.92);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 18px;flex-shrink:0;min-width:140px;
+}
+.score-runs{
+  font-family:'Montserrat',sans-serif;
+  font-size:46px;font-weight:900;color:#0a1420;
+  letter-spacing:1.5px;line-height:1;
+}
+.score-overs{
+  font-size:13px;font-weight:800;color:#444;
+  text-transform:uppercase;letter-spacing:1px;margin-top:1px;
+  background:rgba(0,0,0,.08);padding:2px 8px;border-radius:3px;
+}
 
-/* ── TEAM BLOCK (left) ── */
-.lt-team{
+/* ══════════════════════════════════════
+   SECTION 3 — MIDDLE INFO
+   (Run rate for 1st inn / Chase for 2nd)
+══════════════════════════════════════ */
+.s-mid{
   display:flex;align-items:stretch;flex-shrink:0;
 }
-.lt-team-stripe{width:8px;flex-shrink:0;}
-.lt-team-body{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:0 20px 0 16px;min-width:220px;
-}
-.lt-team-name{
-  font-size:13px;font-weight:700;color:rgba(255,255,255,.55);
-  text-transform:uppercase;letter-spacing:3px;line-height:1;margin-bottom:2px;
-}
-.lt-team-score{
-  font-size:52px;font-weight:900;color:#fff;
-  line-height:.95;letter-spacing:-2px;font-family:'Barlow',sans-serif;
-}
-.lt-team-overs{
-  font-size:13px;font-weight:600;color:rgba(255,255,255,.5);
-  line-height:1;margin-top:3px;letter-spacing:.5px;
-}
 
-/* ── DIVIDER ── */
-.lt-div{width:1px;background:rgba(255,255,255,.1);margin:12px 0;flex-shrink:0;}
-
-/* ── RATES BLOCK ── */
-.lt-rates{
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:0 22px;gap:5px;flex-shrink:0;
+/* 1st innings: RUN RATE + TOSS */
+.mid-1st{display:flex;align-items:stretch;}
+.rr-block{
+  background:#1a2a45;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 20px;border-right:1px solid rgba(255,255,255,.1);
 }
-.lt-inn-label{
-  font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-  padding:2px 10px;border-radius:2px;color:#fff;
+.rr-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;}
+.rr-val{font-size:32px;font-weight:900;color:#00e5ff;font-family:'Montserrat',sans-serif;line-height:1;letter-spacing:1.5px;}
+
+.toss-block{
+  background:#8b1a1a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 16px;gap:1px;
 }
-.lt-rates-row{display:flex;gap:20px;align-items:center;}
-.lt-rate{display:flex;flex-direction:column;align-items:center;}
-.lt-rate-val{font-size:26px;font-weight:900;line-height:1;}
-.lt-rate-val.crr{color:#00e5ff;}
-.lt-rate-val.rrr{color:#ff7744;}
-.lt-rate-val.tgt{color:#ffcc00;}
-.lt-rate-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;}
-.lt-rate-sep{width:1px;height:28px;background:rgba(255,255,255,.12);}
+.toss-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:2px;}
+.toss-team{font-size:15px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;}
+.toss-dec{font-size:11px;font-weight:700;color:rgba(255,200,100,.9);text-transform:uppercase;}
+.toss-icon{font-size:22px;margin-top:2px;}
 
-/* ── BATSMEN BLOCK ── */
-.lt-bats{display:flex;align-items:stretch;flex:1;min-width:0;}
-
-.lt-bat{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:0 18px;flex:1;min-width:0;position:relative;
+/* 2nd innings: NEED X RUNS FROM X BALLS + RRR */
+.mid-2nd{display:flex;align-items:stretch;}
+.need-block{
+  background:#1a1a00;
+  display:flex;align-items:center;gap:0;
 }
-.lt-bat.striker{background:rgba(255,204,0,.055);}
-.lt-bat.striker::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#ffcc00;}
-.lt-bat.nonstriker::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.1);}
-
-.lt-bat-tag{
-  font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,.35);line-height:1;margin-bottom:3px;
+.need-runs,.need-balls{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 16px;
 }
-.lt-bat.striker .lt-bat-tag{color:#ffcc00;}
+.need-num{
+  font-size:38px;font-weight:900;color:#ffcc00;
+  font-family:'Montserrat',sans-serif;line-height:1;letter-spacing:1.5px;
+}
+.need-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.5px;}
+.need-sep{width:1px;background:rgba(255,255,255,.15);margin:12px 0;}
+.rrr-block{
+  background:#2a1500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 16px;border-left:1px solid rgba(255,255,255,.1);
+}
+.rrr-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;}
+.rrr-val{font-size:32px;font-weight:900;color:#ff7744;font-family:'Montserrat',sans-serif;line-height:1;letter-spacing:1.5px;}
 
-.lt-bat-name{
-  font-size:20px;font-weight:800;color:rgba(255,255,255,.92);
+/* ══════════════════════════════════════
+   SECTION 4 — BATSMEN
+══════════════════════════════════════ */
+.s-batsmen{
+  background:#0d1b2e;flex:1;min-width:0;
+  display:flex;align-items:stretch;
+  border-left:1px solid rgba(255,255,255,.08);
+}
+.bat{
+  flex:1;display:flex;align-items:center;gap:0;
+  padding:0 14px;min-width:0;position:relative;
+}
+.bat.striker{background:rgba(255,204,0,.06);}
+.bat.striker::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:#ffcc00;
+}
+.bat-arrow{color:#ffcc00;font-size:14px;flex-shrink:0;margin-right:5px;}
+.bat-info{flex:1;min-width:0;}
+.bat-name{
+  font-size:16px;font-weight:700;color:rgba(255,255,255,.7);
+  font-family:'Montserrat',sans-serif;
+  text-transform:uppercase;letter-spacing:1.5px;line-height:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  text-transform:uppercase;line-height:1.1;letter-spacing:.5px;
 }
-.lt-bat.striker .lt-bat-name{color:#ffcc00;}
+.bat.striker .bat-name{color:#ffcc00;}
+.bat-score-row{display:flex;align-items:baseline;gap:5px;margin-top:2px;}
+.bat-runs{font-size:26px;font-weight:900;color:rgba(255,255,255,.7);font-family:'Montserrat',sans-serif;line-height:1;letter-spacing:1.5px;}
+.bat.striker .bat-runs{color:#ffcc00;}
+.bat-balls{font-size:14px;color:rgba(255,255,255,.4);font-family:'Roboto Condensed',sans-serif;font-weight:600;letter-spacing:1.5px;}
+.bat-div{width:1px;background:rgba(255,255,255,.08);margin:10px 0;}
 
-.lt-bat-row{display:flex;align-items:baseline;gap:4px;margin-top:2px;}
-.lt-bat-runs{
-  font-size:30px;font-weight:900;line-height:1;color:rgba(255,255,255,.9);
-  font-family:'Barlow',sans-serif;
+/* ══════════════════════════════════════
+   SECTION 5 — BOWLER + BALL DOTS
+══════════════════════════════════════ */
+.s-bowler{
+  background:#0a1624;
+  display:flex;align-items:center;gap:16px;
+  padding:0 18px;flex-shrink:0;min-width:340px;
+  border-left:1px solid rgba(255,255,255,.08);
 }
-.lt-bat.striker .lt-bat-runs{color:#ffcc00;}
-.lt-bat-balls{font-size:15px;font-weight:600;color:rgba(255,255,255,.45);}
-.lt-bat-stats{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;letter-spacing:.3px;}
-.lt-bat-stats .f{color:#66dd88;}
-.lt-bat-stats .s{color:#ffcc00;}
+.bowl-left{display:flex;flex-direction:column;gap:2px;}
+.bowl-name{
+  font-size:16px;font-weight:700;color:#fff;
+  font-family:'Montserrat',sans-serif;
+  text-transform:uppercase;letter-spacing:1.5px;line-height:1;
+  white-space:nowrap;
+}
+.bowl-fig{font-size:24px;font-weight:900;color:#00e5ff;font-family:'Montserrat',sans-serif;line-height:1;letter-spacing:1.5px;}
 
-/* ── BALL DOTS ── */
-.lt-balls-wrap{
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:0 18px;flex-shrink:0;gap:4px;
+.over-info{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.over-lbl{
+  font-size:9px;font-weight:800;color:rgba(255,255,255,.4);
+  text-transform:uppercase;letter-spacing:2px;
 }
-.lt-balls-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;}
-.lt-balls{display:flex;gap:5px;align-items:center;}
+.balls-row{display:flex;gap:4px;align-items:center;}
 .ball{
-  width:32px;height:32px;border-radius:50%;
+  width:28px;height:28px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;border:2px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);
-  flex-shrink:0;
+  font-size:11px;font-weight:900;font-family:'Montserrat',sans-serif;
+  letter-spacing:0;
+  border:2px solid;flex-shrink:0;
 }
-.ball.b4{border-color:#44cc66;color:#44cc66;background:rgba(68,204,102,.1);}
-.ball.b6{border-color:#ffcc00;color:#ffcc00;background:rgba(255,204,0,.1);}
-.ball.bw{border-color:#ff3355;color:#ff3355;background:rgba(255,51,85,.1);}
-.ball.bx{border-color:#bbaa00;color:#bbaa00;background:rgba(187,170,0,.08);}
-.ball.bd{opacity:.22;}
+.ball.dot {background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.4);}
+.ball.run1{background:rgba(100,180,255,.12);border-color:rgba(100,180,255,.4);color:#88bbff;}
+.ball.b4  {background:rgba(68,204,136,.15);border-color:#44cc88;color:#44cc88;}
+.ball.b6  {background:rgba(255,204,0,.15);border-color:#ffcc00;color:#ffcc00;}
+.ball.wkt {background:rgba(255,68,102,.15);border-color:#ff4466;color:#ff4466;}
+.ball.wide{background:rgba(200,200,0,.1);border-color:rgba(200,200,0,.4);color:#cccc44;}
+.ball.nb  {background:rgba(255,136,0,.1);border-color:rgba(255,136,0,.4);color:#ff9922;}
 
-/* ── BOWLER BLOCK ── */
-.lt-bowl{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:0 22px 0 16px;flex-shrink:0;min-width:200px;
-}
-.lt-bowl-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px;}
-.lt-bowl-name{
-  font-size:18px;font-weight:800;color:#fff;text-transform:uppercase;
-  letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  line-height:1.1;
-}
-.lt-bowl-fig{font-size:26px;font-weight:900;color:#00e5ff;line-height:1;font-family:'Barlow',sans-serif;}
-.lt-bowl-det{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;}
+/* hidden */
+.hidden{display:none!important;}
 </style>
 </head>
 <body>
+
 <div class="lt" id="lt">
-  <div class="lt-accent" id="lt-accent"></div>
-  <div class="lt-bar" id="lt-bar">
+  <div class="bar" id="lt-bar">
 
-    <!-- Team score -->
-    <div class="lt-team">
-      <div class="lt-team-stripe" id="lt-stripe"></div>
-      <div class="lt-team-body">
-        <div class="lt-team-name" id="lt-tname">TEAM</div>
-        <div class="lt-team-score" id="lt-tscore">0/0</div>
-        <div class="lt-team-overs" id="lt-tovers">0.0 / 20 ov</div>
+    <!-- TEAM -->
+    <div class="s-team" id="s-team">
+      <div class="shield">🏏</div>
+      <div class="team-info">
+        <div class="team-name" id="lt-team">TEAM</div>
+        <div class="team-sub" id="lt-sub">BAT FIRST</div>
       </div>
     </div>
 
-    <div class="lt-div"></div>
+    <!-- SCORE -->
+    <div class="s-score">
+      <div class="score-runs" id="lt-score">0/0</div>
+      <div class="score-overs" id="lt-overs">0.0 OV</div>
+    </div>
 
-    <!-- CRR / RRR / Target -->
-    <div class="lt-rates">
-      <div class="lt-inn-label" id="lt-inn-lbl">1ST INN</div>
-      <div class="lt-rates-row">
-        <div class="lt-rate">
-          <div class="lt-rate-val crr" id="lt-crr">0.00</div>
-          <div class="lt-rate-lbl">CRR</div>
+    <!-- MIDDLE: 1st innings (run rate + toss) -->
+    <div id="mid-1st" class="mid-1st">
+      <div class="rr-block">
+        <div class="rr-label">Run Rate</div>
+        <div class="rr-val" id="lt-crr">0.00</div>
+      </div>
+      <div class="toss-block" id="toss-block">
+        <div class="toss-label">Toss</div>
+        <div class="toss-team" id="lt-toss-team">—</div>
+        <div class="toss-dec" id="lt-toss-dec">Elected to bat</div>
+        <div class="toss-icon">🏆</div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: 2nd innings chase (need X from X + RRR) — only when need < 100 -->
+    <div id="mid-2nd" class="mid-2nd hidden">
+      <div class="need-block">
+        <div class="need-runs">
+          <div class="need-num" id="lt-need">0</div>
+          <div class="need-lbl">Need</div>
         </div>
-        <div class="lt-rate-sep" id="lt-rrr-sep" style="display:none"></div>
-        <div class="lt-rate" id="lt-rrr-wrap" style="display:none">
-          <div class="lt-rate-val rrr" id="lt-rrr">0.00</div>
-          <div class="lt-rate-lbl">RRR</div>
+        <div class="need-sep"></div>
+        <div class="need-balls">
+          <div class="need-num" id="lt-from-balls">0</div>
+          <div class="need-lbl">Balls</div>
         </div>
-        <div class="lt-rate-sep" id="lt-tgt-sep" style="display:none"></div>
-        <div class="lt-rate" id="lt-tgt-wrap" style="display:none">
-          <div class="lt-rate-val tgt" id="lt-tgt">0</div>
-          <div class="lt-rate-lbl">TARGET</div>
+      </div>
+      <div class="rrr-block">
+        <div class="rrr-label">RRR</div>
+        <div class="rrr-val" id="lt-rrr">0.00</div>
+      </div>
+    </div>
+
+    <!-- BATSMEN -->
+    <div class="s-batsmen">
+      <div class="bat striker">
+        <div class="bat-arrow">▶</div>
+        <div class="bat-info">
+          <div class="bat-name" id="bs-name">—</div>
+          <div class="bat-score-row">
+            <div class="bat-runs" id="bs-r">0</div>
+            <div class="bat-balls" id="bs-b">(0)</div>
+          </div>
+        </div>
+      </div>
+      <div class="bat-div"></div>
+      <div class="bat">
+        <div class="bat-info">
+          <div class="bat-name" id="bns-name">—</div>
+          <div class="bat-score-row">
+            <div class="bat-runs" id="bns-r">0</div>
+            <div class="bat-balls" id="bns-b">(0)</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="lt-div"></div>
-
-    <!-- Batsmen -->
-    <div class="lt-bats">
-      <div class="lt-bat striker">
-        <div class="lt-bat-tag">★ ON STRIKE</div>
-        <div class="lt-bat-name" id="bs-name">—</div>
-        <div class="lt-bat-row">
-          <div class="lt-bat-runs" id="bs-r">0</div>
-          <div class="lt-bat-balls" id="bs-b">(0)</div>
-        </div>
-        <div class="lt-bat-stats"><span class="f" id="bs-4">0</span>×4 &nbsp;<span class="s" id="bs-6">0</span>×6</div>
+    <!-- BOWLER + OVER -->
+    <div class="s-bowler">
+      <div class="bowl-left">
+        <div class="bowl-name" id="lt-bowl-name">—</div>
+        <div class="bowl-fig" id="lt-bowl-fig">0-0</div>
       </div>
-      <div class="lt-bat nonstriker">
-        <div class="lt-bat-tag">NON-STRIKER</div>
-        <div class="lt-bat-name" id="bns-name">—</div>
-        <div class="lt-bat-row">
-          <div class="lt-bat-runs" id="bns-r">0</div>
-          <div class="lt-bat-balls" id="bns-b">(0)</div>
-        </div>
-        <div class="lt-bat-stats"><span class="f" id="bns-4">0</span>×4 &nbsp;<span class="s" id="bns-6">0</span>×6</div>
+      <div class="over-info">
+        <div class="over-lbl" id="lt-ov-lbl">THIS OVER</div>
+        <div class="balls-row" id="lt-balls"></div>
       </div>
-    </div>
-
-    <div class="lt-div"></div>
-
-    <!-- Ball dots -->
-    <div class="lt-balls-wrap">
-      <div class="lt-balls-lbl" id="lt-ov-lbl">OVER 1</div>
-      <div class="lt-balls" id="lt-balls"></div>
-    </div>
-
-    <div class="lt-div"></div>
-
-    <!-- Bowler -->
-    <div class="lt-bowl">
-      <div class="lt-bowl-lbl">BOWLING</div>
-      <div class="lt-bowl-name" id="lt-bowl-n">—</div>
-      <div class="lt-bowl-fig" id="lt-bowl-f">0-0</div>
-      <div class="lt-bowl-det" id="lt-bowl-d"></div>
     </div>
 
   </div>
@@ -231,86 +301,129 @@ body{background:transparent!important;overflow:hidden;width:1920px;height:1080px
 <script>
 let prevScore = null;
 
-function ws() {
+function ws(){
   const w = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
   w.onmessage = e => { const m=JSON.parse(e.data); if(m.type==='state') render(m.payload); };
-  w.onclose = () => setTimeout(ws,3000);
-  w.onerror = () => w.close();
+  w.onclose = () => setTimeout(ws, 3000);
+  w.onerror  = () => w.close();
 }
 
-function g(id){return document.getElementById(id);}
-function show(id){g(id).style.display='';}
-function hide(id){g(id).style.display='none';}
+function g(id){ return document.getElementById(id); }
 
-function render(S) {
-  if (!S||!S.innings.length||S.status==='setup') return;
+function render(S){
+  if(!S || !S.innings.length || S.status==='setup') return;
   const inn = S.innings[S.currentInnings-1];
-  if (!inn) return;
+  if(!inn) return;
   const m = S.match;
   const battTeam = m[inn.battingTeamKey];
+  const is2nd = S.currentInnings === 2;
 
-  // Accent bar = team1 | team2 colours
-  g('lt-accent').style.background=`linear-gradient(90deg,${m.team1.color} 50%,${m.team2.color} 50%)`;
-  g('lt-stripe').style.background = battTeam.color;
+  // Team colour on left panel
+  g('s-team').style.background = battTeam.color || '#1a3a6b';
 
   // Flash on score change
-  if (prevScore!==null && prevScore!==inn.score) {
-    const bar=g('lt-bar'); bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
+  if(prevScore !== null && prevScore !== inn.score){
+    const bar = g('lt-bar');
+    bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
   }
   prevScore = inn.score;
 
-  g('lt-tname').textContent = (battTeam.shortName||battTeam.name).toUpperCase();
-  g('lt-tscore').textContent = `${inn.score}/${inn.wickets}`;
-  g('lt-tovers').textContent = `${inn.oversCompleted}.${inn.currentOverBalls} / ${m.overs} OV`;
-  g('lt-inn-lbl').textContent = S.currentInnings===1?'1ST INN':'2ND INN';
-  g('lt-inn-lbl').style.background = battTeam.color;
+  // Team name
+  g('lt-team').textContent = (battTeam.shortName || battTeam.name).toUpperCase();
+  g('lt-sub').textContent  = is2nd ? 'CHASING' : 'BAT FIRST';
 
-  // Rates
-  const balls = inn.oversCompleted*6+inn.currentOverBalls;
-  g('lt-crr').textContent = balls>0 ? (inn.score/balls*6).toFixed(2) : '0.00';
+  // Score
+  g('lt-score').textContent = `${inn.score}/${inn.wickets}`;
+  g('lt-overs').textContent = `${inn.oversCompleted}.${inn.currentOverBalls} OVERS`;
 
-  if (inn.target) {
-    const bl=m.overs*6-balls, need=inn.target-inn.score;
-    g('lt-rrr').textContent = bl>0&&need>0 ? (need/bl*6).toFixed(2) : '0.00';
-    g('lt-tgt').textContent = inn.target;
-    show('lt-rrr-sep');show('lt-rrr-wrap');show('lt-tgt-sep');show('lt-tgt-wrap');
+  // Run rate
+  const balls = inn.oversCompleted*6 + inn.currentOverBalls;
+  const crr   = balls > 0 ? (inn.score/balls*6).toFixed(2) : '0.00';
+  g('lt-crr').textContent = crr;
+
+  if(is2nd && inn.target){
+    // ── 2nd innings ──────────────────────────
+    const ballsLeft = m.overs*6 - balls;
+    const need      = Math.max(0, inn.target - inn.score);
+    const rrr       = ballsLeft > 0 && need > 0 ? (need/ballsLeft*6).toFixed(2) : '0.00';
+
+    // Only show chase block when need < 100
+    if(need > 0 && need < 100){
+      g('mid-1st').classList.add('hidden');
+      g('mid-2nd').classList.remove('hidden');
+      g('lt-need').textContent       = need;
+      g('lt-from-balls').textContent = ballsLeft;
+      g('lt-rrr').textContent        = rrr;
+    } else {
+      // need >= 100 or match won: show run rate + toss instead
+      g('mid-2nd').classList.add('hidden');
+      g('mid-1st').classList.remove('hidden');
+      g('lt-crr').textContent = crr;
+      renderToss(m);
+    }
   } else {
-    hide('lt-rrr-sep');hide('lt-rrr-wrap');hide('lt-tgt-sep');hide('lt-tgt-wrap');
+    // ── 1st innings ──────────────────────────
+    g('mid-2nd').classList.add('hidden');
+    g('mid-1st').classList.remove('hidden');
+    renderToss(m);
   }
 
   // Batsmen
-  const bs=inn.batsmen.find(b=>b.id===inn.onStrike);
-  const bns=inn.batsmen.find(b=>b.id===inn.onNonStrike);
-  if(bs){g('bs-name').textContent=bs.name.toUpperCase();g('bs-r').textContent=bs.runs;g('bs-b').textContent=`(${bs.balls})`;g('bs-4').textContent=bs.fours;g('bs-6').textContent=bs.sixes;}
-  if(bns){g('bns-name').textContent=bns.name.toUpperCase();g('bns-r').textContent=bns.runs;g('bns-b').textContent=`(${bns.balls})`;g('bns-4').textContent=bns.fours;g('bns-6').textContent=bns.sixes;}
-
-  // Ball dots
-  const cur=inn.currentOverBallHistory||[];
-  const last=inn.overHistory[inn.overHistory.length-1];
-  const disp=cur.length>0?cur:(last?.balls||[]);
-  g('lt-ov-lbl').textContent=`OVER ${cur.length>0?inn.oversCompleted+1:inn.oversCompleted}`;
-  g('lt-balls').innerHTML = disp.slice(-8).map(b=>{
-    let c='ball';
-    if(b.isWicket) c+=' bw';
-    else if(b.batsmanRuns===4) c+=' b4';
-    else if(b.batsmanRuns===6) c+=' b6';
-    else if(b.type==='wide'||b.type==='noball') c+=' bx';
-    else if(b.totalRuns===0) c+=' bd';
-    return `<div class="${c}">${b.display}</div>`;
-  }).join('')||[...Array(6)].map(()=>`<div class="ball bd">·</div>`).join('');
+  const bs  = inn.batsmen.find(b => b.id === inn.onStrike);
+  const bns = inn.batsmen.find(b => b.id === inn.onNonStrike);
+  if(bs) {
+    g('bs-name').textContent = bs.name.toUpperCase();
+    g('bs-r').textContent    = bs.runs;
+    g('bs-b').textContent    = `(${bs.balls})`;
+  }
+  if(bns){
+    g('bns-name').textContent = bns.name.toUpperCase();
+    g('bns-r').textContent    = bns.runs;
+    g('bns-b').textContent    = `(${bns.balls})`;
+  }
 
   // Bowler
-  const bowl=inn.bowlers.find(b=>b.id===inn.currentBowler);
+  const bowl = inn.bowlers.find(b => b.id === inn.currentBowler);
   if(bowl){
-    g('lt-bowl-n').textContent=bowl.name.toUpperCase();
-    g('lt-bowl-f').textContent=`${bowl.wickets}-${bowl.runs}`;
-    const ov=`${Math.floor(bowl.legalBalls/6)}.${bowl.legalBalls%6}`;
-    const eco=bowl.legalBalls>0?(bowl.runs/bowl.legalBalls*6).toFixed(2):'—';
-    g('lt-bowl-d').textContent=`${ov} OV  ECO ${eco}`;
+    g('lt-bowl-name').textContent = bowl.name.toUpperCase();
+    const ov = `${Math.floor(bowl.legalBalls/6)}.${bowl.legalBalls%6}`;
+    g('lt-bowl-fig').textContent  = `${bowl.wickets}-${bowl.runs} (${ov})`;
   } else {
-    g('lt-bowl-n').textContent='—';g('lt-bowl-f').textContent='';g('lt-bowl-d').textContent='';
+    g('lt-bowl-name').textContent = '—';
+    g('lt-bowl-fig').textContent  = '';
+  }
+
+  // Over balls
+  const cur    = inn.currentOverBallHistory || [];
+  const lastOv = inn.overHistory[inn.overHistory.length-1];
+  const disp   = cur.length > 0 ? cur : (lastOv?.balls || []);
+  const ovNum  = cur.length > 0 ? inn.oversCompleted+1 : inn.oversCompleted;
+  g('lt-ov-lbl').textContent = `OVER ${ovNum}`;
+
+  const ballHTML = disp.slice(-8).map(b => {
+    let cls, txt;
+    if      (b.isWicket)                                     { cls='wkt';  txt='W'; }
+    else if (b.batsmanRuns === 6)                             { cls='b6';   txt='6'; }
+    else if (b.batsmanRuns === 4)                             { cls='b4';   txt='4'; }
+    else if (b.type === 'wide')                              { cls='wide'; txt='WD';}
+    else if (b.type === 'noball')                            { cls='nb';   txt='NB';}
+    else if (b.totalRuns === 0)                              { cls='dot';  txt='•'; }
+    else                                                      { cls='run1'; txt=b.totalRuns; }
+    return `<div class="ball ${cls}">${txt}</div>`;
+  }).join('');
+
+  g('lt-balls').innerHTML = ballHTML ||
+    [1,2,3,4,5,6].map(() => `<div class="ball dot">·</div>`).join('');
+}
+
+function renderToss(m){
+  if(m.toss.winner){
+    const tw = m[m.toss.winner];
+    g('lt-toss-team').textContent = (tw.shortName || tw.name).toUpperCase();
+    g('lt-toss-dec').textContent  = `ELECTED TO ${m.toss.decision.toUpperCase()}`;
   }
 }
+
 ws();
 </script>
 </body>

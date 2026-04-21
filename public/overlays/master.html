@@ -14,24 +14,28 @@ body { background:transparent!important; overflow:hidden; width:1920px; height:1
 </style>
 </head>
 <body>
-  <iframe class="ov active" id="ov-lower-third"   src="/overlays/lower-third.html"   allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-scorecard"      src="/overlays/scorecard.html"      allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-batsmen"        src="/overlays/batsmen.html"        allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-bowling"        src="/overlays/bowling.html"        allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-runrate"        src="/overlays/runrate.html"        allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-partnerships"   src="/overlays/partnerships.html"   allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-teamsheet"      src="/overlays/teamsheet.html"      allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-chase"          src="/overlays/chase.html"          allowtransparency="true"></iframe>
-  <iframe class="ov"        id="ov-summary"        src="/overlays/summary.html"        allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-toss"          src="/overlays/toss.html"          allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-teamsheet"      src="/overlays/teamsheet.html"      allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-lower-third"    src="/overlays/lower-third.html"    allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-scorecard"      src="/overlays/scorecard.html"      allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-batsmen"        src="/overlays/batsmen.html"        allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-bowling"        src="/overlays/bowling.html"        allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-partnerships"   src="/overlays/partnerships.html"   allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-chase"          src="/overlays/chase.html"          allowtransparency="true"></iframe>
+  <iframe class="ov" id="ov-summary"        src="/overlays/summary.html"        allowtransparency="true"></iframe>
 
 <script>
-let current = 'lower-third';
+const VALID = new Set(['toss','teamsheet','lower-third','scorecard','batsmen','bowling','partnerships','chase','summary']);
+let current = null; // nothing shown on load — completely blank/transparent
 
 function switchOverlay(name) {
+  if (!VALID.has(name)) return; // silently reject stale values from old match-state.json
   if (name === current) return;
-  const prev = document.getElementById('ov-' + current);
+  if (current) {
+    const prev = document.getElementById('ov-' + current);
+    if (prev) prev.classList.remove('active');
+  }
   const next = document.getElementById('ov-' + name);
-  if (prev) prev.classList.remove('active');
   if (next) { next.classList.add('active'); current = name; }
 }
 
@@ -40,8 +44,8 @@ function connect() {
   ws.onmessage = e => {
     const { type, payload } = JSON.parse(e.data);
     if (type === 'state') {
-      const name = payload.match?.activeOverlay || 'lower-third';
-      switchOverlay(name);
+      const name = payload.match?.activeOverlay;
+      if (name) switchOverlay(name);
     }
   };
   ws.onclose = () => setTimeout(connect, 3000);

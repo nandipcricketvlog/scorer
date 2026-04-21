@@ -2,45 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<style id="th">
+body[data-theme="big_bash"]{
+  --th-bg:#070d1f;--th-surf:#0d1b2e;--th-panel:#0a1624;
+  --th-hdr1:#1a3a6b;--th-hdr2:#0d2244;
+  --th-accent:#2a5ba8;--th-accent2:#4488ff;
+  --th-row:rgba(255,255,255,.03);--th-glow:rgba(68,136,255,.12);
+  --th-str:#ffcc00;--th-four:#44cc88;--th-six:#ffcc00;
+  --th-wkt:#ff4466;--th-crr:#00e5ff;--th-rrr:#ff7744;
+  --th-text:#fff;--th-muted:rgba(255,255,255,.5);
+  --th-bdr:rgba(255,255,255,.1);
+}
+body[data-theme="classic"]{
+  --th-bg:#031002;--th-surf:#061a04;--th-panel:#092406;
+  --th-hdr1:#1a4a10;--th-hdr2:#0d2e08;
+  --th-accent:#3a8a25;--th-accent2:#5cb840;
+  --th-row:rgba(92,184,64,.04);--th-glow:rgba(58,138,37,.12);
+  --th-str:#c9a227;--th-four:#5cb840;--th-six:#c9a227;
+  --th-wkt:#e84040;--th-crr:#5cb840;--th-rrr:#e88c20;
+  --th-text:#f0ead8;--th-muted:rgba(240,234,216,.5);
+  --th-bdr:rgba(255,255,255,.12);
+}
+body[data-theme="ipl"]{
+  --th-bg:#06021a;--th-surf:#0e0428;--th-panel:#130530;
+  --th-hdr1:#3a0e7a;--th-hdr2:#1e0850;
+  --th-accent:#8822cc;--th-accent2:#b050f0;
+  --th-row:rgba(136,34,204,.05);--th-glow:rgba(136,34,204,.15);
+  --th-str:#ff6b00;--th-four:#ff6b00;--th-six:#ffcc00;
+  --th-wkt:#ff2255;--th-crr:#cc44ff;--th-rrr:#ff6b00;
+  --th-text:#fff;--th-muted:rgba(255,255,255,.5);
+  --th-bdr:rgba(255,255,255,.12);
+}
+body[data-theme="minimal"]{
+  --th-bg:#080808;--th-surf:#111;--th-panel:#181818;
+  --th-hdr1:#222;--th-hdr2:#141414;
+  --th-accent:#555;--th-accent2:#888;
+  --th-row:rgba(255,255,255,.02);--th-glow:rgba(255,255,255,.04);
+  --th-str:#fff;--th-four:#aaa;--th-six:#fff;
+  --th-wkt:#cc3333;--th-crr:#aaa;--th-rrr:#777;
+  --th-text:#eee;--th-muted:rgba(255,255,255,.45);
+  --th-bdr:rgba(255,255,255,.1);
+}
+</style>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@700;800;900&family=Barlow+Condensed:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto+Condensed:wght@400;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Barlow Condensed',sans-serif;}
+body{background:transparent!important;overflow:hidden;width:1920px;height:1080px;font-family:'Roboto Condensed',sans-serif;letter-spacing:1.5px;}
 
 .su-wrap{
   position:absolute;inset:0;display:flex;flex-direction:column;
-  background:#0a1420;animation:fadeIn .8s ease both;
+  background:var(--th-bg);animation:fadeIn .8s ease both;
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .su-wrap.hidden{display:none!important;}
 
 /* ── RESULT BANNER ── */
 .su-banner{
-  height:112px;background:linear-gradient(135deg,#1a3a6b 0%,#0d2244 60%,#1a2a4a 100%);
+  height:112px;background:linear-gradient(135deg,var(--th-hdr1) 0%,var(--th-hdr2) 60%,#1a2a4a 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
-  border-bottom:3px solid #4488ff;
+  border-bottom:3px solid var(--th-accent2);
 }
-.su-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(68,136,255,.08) 0%,transparent 50%);}
-.su-result{font-size:44px;font-weight:900;color:#ffcc00;text-transform:uppercase;letter-spacing:2px;font-family:'Barlow',sans-serif;line-height:1;z-index:1;}
+.su-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--th-glow) 0%,transparent 50%);}
+.su-result{font-size:44px;font-weight:900;color:var(--th-str);text-transform:uppercase;letter-spacing:2px;font-family:'Montserrat',sans-serif;line-height:1;z-index:1;}
 .su-venue{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-top:5px;z-index:1;}
 
 /* ── TEAM SCORES BAR ── */
 .su-scores{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(255,255,255,.07);}
 .su-team-score{
-  background:#131f35;height:72px;display:flex;align-items:center;gap:0;
+  background:var(--th-panel);height:72px;display:flex;align-items:center;gap:0;
   position:relative;overflow:hidden;
 }
 .su-team-stripe{width:5px;height:100%;flex-shrink:0;}
-.su-team-name{font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;padding:0 18px;font-family:'Barlow',sans-serif;}
-.su-team-total{font-size:34px;font-weight:900;color:#fff;margin-left:auto;padding-right:18px;font-family:'Barlow',sans-serif;}
+.su-team-name{font-size:22px;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:1px;padding:0 18px;font-family:'Montserrat',sans-serif;}
+.su-team-total{font-size:34px;font-weight:900;color:#fff;margin-left:auto;padding-right:18px;font-family:'Montserrat',sans-serif;
+  letter-spacing:1.5px;
+}
 .su-team-overs{font-size:14px;color:rgba(255,255,255,.4);padding-right:18px;align-self:flex-end;padding-bottom:6px;}
 
 /* ── SCORECARDS GRID ── */
 .su-cards{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(255,255,255,.07);min-height:0;}
-.su-card{background:#0d1b2e;display:flex;flex-direction:column;overflow:hidden;}
+.su-card{background:var(--th-surf);display:flex;flex-direction:column;overflow:hidden;}
 .su-card-head{
-  background:#0a1624;padding:7px 20px;border-bottom:1px solid rgba(255,255,255,.1);
+  background:var(--th-panel);padding:7px 20px;border-bottom:1px solid rgba(255,255,255,.1);
   display:flex;justify-content:space-between;align-items:center;
 }
 .su-card-title{font-size:11px;font-weight:800;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;}
@@ -52,26 +96,26 @@ body{background:transparent!important;overflow:hidden;width:1920px;height:1080px
 .su-tbl th:first-child{text-align:left;}
 .su-tbl td{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.04);text-align:right;color:rgba(255,255,255,.65);}
 .su-tbl td:first-child{text-align:left;color:#fff;font-weight:700;font-size:15px;}
-.su-tbl tr.top-bat td:first-child{color:#ffcc00;}
-.su-tbl tr.top-bat td.runs{color:#ffcc00!important;font-weight:900;}
-.su-tbl tr.top-bow td:first-child{color:#00e5ff;}
+.su-tbl tr.top-bat td:first-child{color:var(--th-str);}
+.su-tbl tr.top-bat td.runs{color:var(--th-str)!important;font-weight:900;}
+.su-tbl tr.top-bow td:first-child{color:var(--th-crr);}
 .su-tbl td.runs{font-size:17px;font-weight:900;color:#fff;}
-.su-tbl td.wkts{font-size:17px;font-weight:900;color:#ff4466;}
-.su-tbl tr.top-bow td.wkts{color:#ff4466!important;}
-.su-tbl td.notout{color:#44cc88;font-size:12px;}
+.su-tbl td.wkts{font-size:17px;font-weight:900;color:var(--th-wkt);}
+.su-tbl tr.top-bow td.wkts{color:var(--th-wkt)!important;}
+.su-tbl td.notout{color:var(--th-four);font-size:12px;}
 .su-tbl .extras-row td{color:rgba(255,255,255,.35);font-size:12px;}
-.su-tbl .total-row td{font-weight:900;color:#fff!important;font-size:16px;border-top:1px solid rgba(255,255,255,.1);background:rgba(68,136,255,.07);}
+.su-tbl .total-row td{font-weight:900;color:#fff!important;font-size:16px;border-top:1px solid rgba(255,255,255,.1);background:var(--th-row);}
 
 /* ── HONOURS ── */
 .su-honours{
-  background:#0a1624;height:80px;display:flex;align-items:center;
+  background:var(--th-panel);height:80px;display:flex;align-items:center;
   border-top:1px solid rgba(255,255,255,.08);
 }
 .su-honour{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.07);}
 .su-honour:last-child{border-right:none;}
 .su-hon-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:3px;}
-.su-hon-name{font-size:18px;font-weight:900;color:#ffcc00;text-transform:uppercase;line-height:1;}
-.su-hon-val{font-size:13px;font-weight:700;color:#00e5ff;}
+.su-hon-name{font-size:18px;font-weight:900;color:var(--th-str);text-transform:uppercase;line-height:1;}
+.su-hon-val{font-size:13px;font-weight:700;color:var(--th-crr);}
 </style>
 </head>
 <body>
@@ -177,6 +221,7 @@ function renderInn(idx,batBid,batTid,batTeamId,bowBid,bowTid,bowTeamId,allP,S){
 }
 
 function render(S){
+  document.body.dataset.theme = S?.match?.style || 'big_bash';
   const wrap=g('su-wrap');
   if(!S||S.status!=='complete'||!S.innings.length){wrap.classList.add('hidden');return;}
   wrap.classList.remove('hidden');

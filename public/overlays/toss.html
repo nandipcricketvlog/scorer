@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto+Condensed:wght@400;600;700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:transparent!important;overflow:hidden;
+  width:1920px;height:1080px;
+  font-family:'Roboto Condensed',sans-serif;letter-spacing:1.5px;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:100px;
+}
+
+/* ── THEMES ── */
+body[data-theme="big_bash"]{
+  --th-surf:#0d1b2e;--th-panel:#0a1624;
+  --th-hdr1:#1a3a6b;--th-hdr2:#0d2244;
+  --th-accent:#2a5ba8;--th-accent2:#4488ff;
+  --th-str:#ffcc00;--th-text:#fff;--th-muted:rgba(255,255,255,.5);
+  --th-bdr:rgba(255,255,255,.1);
+}
+body[data-theme="classic"]{
+  --th-surf:#061a04;--th-panel:#092406;
+  --th-hdr1:#1a4a10;--th-hdr2:#0d2e08;
+  --th-accent:#3a8a25;--th-accent2:#5cb840;
+  --th-str:#c9a227;--th-text:#f0ead8;--th-muted:rgba(240,234,216,.5);
+  --th-bdr:rgba(255,255,255,.12);
+}
+body[data-theme="ipl"]{
+  --th-surf:#0e0428;--th-panel:#130530;
+  --th-hdr1:#3a0e7a;--th-hdr2:#1e0850;
+  --th-accent:#8822cc;--th-accent2:#b050f0;
+  --th-str:#ff6b00;--th-text:#fff;--th-muted:rgba(255,255,255,.5);
+  --th-bdr:rgba(255,255,255,.12);
+}
+body[data-theme="minimal"]{
+  --th-surf:#111;--th-panel:#181818;
+  --th-hdr1:#222;--th-hdr2:#141414;
+  --th-accent:#555;--th-accent2:#888;
+  --th-str:#fff;--th-text:#eee;--th-muted:rgba(255,255,255,.45);
+  --th-bdr:rgba(255,255,255,.1);
+}
+
+/* ── CARD ── */
+.card{
+  width:900px;
+  background:var(--th-surf);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.7);
+  animation:popIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+.card-top{height:5px;}
+
+/* ── HEADER ── */
+.card-head{
+  background:linear-gradient(135deg,var(--th-hdr1),var(--th-hdr2));
+  padding:28px 36px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  border-bottom:1px solid var(--th-bdr);
+}
+.trophy{font-size:44px;line-height:1;}
+.head-text{text-align:center;}
+.head-title{
+  font-family:'Roboto Condensed',sans-serif;
+  font-size:13px;font-weight:700;color:var(--th-muted);
+  text-transform:uppercase;letter-spacing:4px;margin-bottom:4px;
+}
+.head-match{
+  font-family:'Montserrat',sans-serif;
+  font-size:28px;font-weight:900;color:var(--th-text);
+  text-transform:uppercase;letter-spacing:2px;
+}
+
+/* ── IN PROGRESS STATE ── */
+.toss-pending{
+  padding:56px 36px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.pending-icon{font-size:52px;animation:spin 3s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.pending-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:32px;font-weight:900;color:var(--th-text);
+  text-transform:uppercase;letter-spacing:2px;
+}
+.pending-sub{
+  font-size:15px;font-weight:600;color:var(--th-muted);
+  text-transform:uppercase;letter-spacing:2px;
+}
+
+/* ── TOSS RESULT ── */
+.toss-result{
+  padding:36px 36px 28px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  border-bottom:1px solid var(--th-bdr);
+}
+.toss-won-lbl{font-size:13px;font-weight:700;color:var(--th-muted);text-transform:uppercase;letter-spacing:3px;}
+.toss-won-team{
+  font-family:'Montserrat',sans-serif;
+  font-size:52px;font-weight:900;
+  text-transform:uppercase;letter-spacing:2px;line-height:1;
+}
+.toss-won-sub{font-size:14px;font-weight:700;color:var(--th-muted);text-transform:uppercase;letter-spacing:2px;margin-top:4px;}
+
+/* ── DECISION PANELS ── */
+.decision{
+  display:flex;align-items:stretch;margin:0 36px 28px;
+  background:var(--th-panel);border-radius:8px;overflow:hidden;
+  border:1px solid var(--th-bdr);
+}
+.dec-half{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:20px 16px;position:relative;
+}
+.dec-half.elected::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--th-str);
+}
+.dec-half.elected{background:rgba(255,255,255,.04);}
+.dec-icon{font-size:32px;line-height:1;margin-bottom:8px;}
+.dec-label{font-size:11px;font-weight:700;color:var(--th-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.dec-value{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:var(--th-text);text-transform:uppercase;letter-spacing:1.5px;}
+.dec-half.elected .dec-value{color:var(--th-str);}
+.dec-divider{width:1px;background:var(--th-bdr);margin:16px 0;}
+
+/* ── DETAILS FOOTER ── */
+.details{display:flex;border-top:1px solid var(--th-bdr);}
+.detail{flex:1;padding:16px 20px;display:flex;flex-direction:column;align-items:center;border-right:1px solid var(--th-bdr);}
+.detail:last-child{border-right:none;}
+.detail-label{font-size:10px;font-weight:700;color:var(--th-muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}
+.detail-value{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:var(--th-text);text-transform:uppercase;letter-spacing:1.5px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="card-top" id="card-top"></div>
+
+  <div class="card-head">
+    <div class="trophy" id="head-icon">🪙</div>
+    <div class="head-text">
+      <div class="head-title">Toss Result</div>
+      <div class="head-match" id="match-title">Loading…</div>
+    </div>
+  </div>
+
+  <!-- PENDING: shown when toss not done yet -->
+  <div class="toss-pending" id="toss-pending">
+    <div class="pending-icon">🪙</div>
+    <div class="pending-title">Toss in Progress</div>
+    <div class="pending-sub">Awaiting toss result…</div>
+  </div>
+
+  <!-- RESULT: shown when toss is done -->
+  <div id="toss-done" style="display:none">
+    <div class="toss-result">
+      <div class="toss-won-lbl">Won the Toss</div>
+      <div class="toss-won-team" id="toss-team">—</div>
+      <div class="toss-won-sub" id="toss-sub">Elected to bat</div>
+    </div>
+
+    <div class="decision">
+      <div class="dec-half" id="dec-bat">
+        <div class="dec-icon">🏏</div>
+        <div class="dec-label">Batting First</div>
+        <div class="dec-value" id="batting-team">—</div>
+      </div>
+      <div class="dec-divider"></div>
+      <div class="dec-half" id="dec-bowl">
+        <div class="dec-icon">⚾</div>
+        <div class="dec-label">Bowling First</div>
+        <div class="dec-value" id="bowling-team">—</div>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="detail"><div class="detail-label">Format</div><div class="detail-value" id="d-format">—</div></div>
+      <div class="detail"><div class="detail-label">Venue</div><div class="detail-value" id="d-venue">—</div></div>
+      <div class="detail"><div class="detail-label">Date</div><div class="detail-value" id="d-date">—</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function ws(){
+  const w=new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}`);
+  w.onmessage=e=>{const msg=JSON.parse(e.data);if(msg.type==='state')render(msg.payload);};
+  w.onclose=()=>setTimeout(ws,3000);w.onerror=()=>w.close();
+}
+function g(id){return document.getElementById(id);}
+
+function render(S){
+  document.body.dataset.theme=S?.match?.style||'big_bash';
+  if(!S)return;
+  const m=S.match;
+  const t1=m.team1,t2=m.team2;
+
+  // Match title & accent bar
+  g('match-title').textContent=`${(t1.shortName||t1.name||'Team 1').toUpperCase()} vs ${(t2.shortName||t2.name||'Team 2').toUpperCase()}`;
+  g('card-top').style.background=`linear-gradient(90deg,${t1.color||'#2a5ba8'} 50%,${t2.color||'#ff4081'} 50%)`;
+
+  if(!m.toss||!m.toss.winner){
+    // No toss yet — show pending state
+    g('toss-pending').style.display='';
+    g('toss-done').style.display='none';
+    g('head-icon').textContent='🪙';
+    return;
+  }
+
+  // Toss done — show result
+  g('toss-pending').style.display='none';
+  g('toss-done').style.display='';
+  g('head-icon').textContent='🏆';
+
+  const winner=m[m.toss.winner];
+  const loser=m.toss.winner==='team1'?t2:t1;
+  const batFirst=m.toss.decision==='bat'?winner:loser;
+  const bowlFirst=m.toss.decision==='bat'?loser:winner;
+
+  g('toss-team').textContent=(winner.shortName||winner.name).toUpperCase();
+  g('toss-team').style.color=winner.color||'var(--th-str)';
+  g('toss-sub').textContent=`Elected to ${m.toss.decision.toUpperCase()} FIRST`;
+
+  g('batting-team').textContent=(batFirst.shortName||batFirst.name).toUpperCase();
+  g('bowling-team').textContent=(bowlFirst.shortName||bowlFirst.name).toUpperCase();
+
+  g('dec-bat').classList.toggle('elected',m.toss.decision==='bat');
+  g('dec-bowl').classList.toggle('elected',m.toss.decision==='field');
+
+  g('d-format').textContent=`${m.overs} OVERS`;
+  g('d-venue').textContent=(m.venue||'—').toUpperCase();
+  g('d-date').textContent=m.date||'—';
+}
+ws();
+</script>
+</body>
+</html>

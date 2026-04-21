@@ -1,157 +1,134 @@
-# 🏏 Cricket Scorer — Render-Ready OBS Broadcast System
+# 🏏 Cricket Scorer — OBS Broadcast System
 
-Real-time cricket scoring with OBS overlays, admin login, WebSocket updates, and **Postgres-backed match state** for proper server-side persistence.
-
----
-
-## What changed
-
-This version is ready for **Render**:
-- Uses `process.env.PORT`
-- Uses **secure WebSocket handling** (`ws` locally, `wss` on HTTPS)
-- Stores match state in **Postgres** instead of a local JSON file
-- Includes `render.yaml` so Render can provision the web service and database together
-- Includes `/healthz` for Render health checks
+Real-time cricket scoring with Big Bash–style OBS overlays. Score from your phone, broadcast to OBS from anywhere.
 
 ---
 
-## Local development
+## ⚡ Local Quick Start
 
-### 1) Install dependencies
 ```bash
+cd cricket-scorer
 npm install
-```
-
-### 2) Set environment variables
-Copy `.env.example` to `.env` and fill in:
-- `ADMIN_PASSWORD`
-- `SESSION_SECRET`
-- `DATABASE_URL`
-
-Example local Postgres URL:
-```bash
-postgres://postgres:postgres@localhost:5432/cricket_scorer
-```
-
-### 3) Start the app
-```bash
 npm start
 ```
 
-Open:
-```text
-http://localhost:3000/login
+Open **http://localhost:3000** — you'll be asked for a password.
+Default local password: **cricket123**
+
+---
+
+## 🚀 Deploy to Railway (Score from Anywhere)
+
+Railway gives you a public HTTPS URL so you can score from your phone while OBS runs on your PC at home.
+
+### Step 1 — Create a free Railway account
+Go to **railway.app** and sign up.
+
+### Step 2 — Upload your project
+
+**Option A: via GitHub (easiest)**
+1. Create a GitHub account if you don't have one — **github.com**
+2. Create a new **public** repository
+3. Upload all files from this folder to it
+4. In Railway: **New Project → Deploy from GitHub repo** → select your repo → Deploy
+
+**Option B: via Railway CLI**
+```bash
+npm install -g @railway/cli
+railway login
+railway init
+railway up
+```
+
+### Step 3 — Set environment variables
+
+In the Railway dashboard → your project → **Variables** tab, add these two:
+
+| Variable | Value |
+|---|---|
+| `ADMIN_PASSWORD` | Your chosen password (e.g. `BlueKings2024!`) |
+| `SESSION_SECRET` | A long random string — generate one with the command below |
+
+To generate a SESSION_SECRET, run this in any terminal:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+### Step 4 — Get your public URL
+
+Railway shows your URL in the dashboard, something like:
+`https://cricket-scorer-production-xxxx.up.railway.app`
+
+- **Score from your phone:** open that URL → enter password → admin panel
+- **OBS on your PC:** use the same base URL for all overlay Browser Sources
+
+### Step 5 — Update OBS Browser Sources
+
+Replace `http://localhost:3000` with your Railway URL in every Browser Source:
+
+```
+https://your-url.up.railway.app/overlays/lower-third.html
+https://your-url.up.railway.app/overlays/scorecard.html
+https://your-url.up.railway.app/overlays/batsmen.html
+https://your-url.up.railway.app/overlays/bowling.html
+https://your-url.up.railway.app/overlays/runrate.html
+https://your-url.up.railway.app/overlays/partnerships.html
+https://your-url.up.railway.app/overlays/teamsheet.html
+https://your-url.up.railway.app/overlays/chase.html
+https://your-url.up.railway.app/overlays/celebrations.html
+https://your-url.up.railway.app/overlays/summary.html
 ```
 
 ---
 
-## Deploy to Render
+## 🔐 Security
 
-### Easiest method — Blueprint deploy
-
-1. Upload this project to GitHub
-2. In Render, choose **New + → Blueprint**
-3. Select your GitHub repo
-4. Render will detect `render.yaml`
-5. Set your `ADMIN_PASSWORD` when prompted
-6. Deploy
-
-That blueprint creates:
-- one **Node Web Service**
-- one **Render Postgres** database
-
-### Manual method
-
-If you do not want to use the blueprint:
-
-1. Create a **Postgres** database in Render
-2. Create a **Web Service** from your GitHub repo
-3. Set these values:
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-   - **Health Check Path:** `/healthz`
-4. Add environment variables:
-   - `ADMIN_PASSWORD`
-   - `SESSION_SECRET`
-   - `DATABASE_URL` (from your Render Postgres instance)
+- Admin panel and all API routes require your password
+- OBS overlay URLs are **intentionally public** — OBS Browser Sources don't support login cookies
+- Sessions last 7 days — you stay logged in on your phone between sessions
+- Logout button is in the top-right of the admin panel
 
 ---
 
-## Important deployment notes
+## ⚠️ Railway Free Tier Notes
 
-### Match state storage
-The app now stores the full match state in Postgres table `match_state`.
-That means:
-- match data survives restarts
-- match data survives redeploys
-- no dependence on local server files
+- Match state persists between restarts but **resets on redeploy** — don't redeploy mid-match
+- The free tier app may sleep after inactivity. Open the URL about 1 minute before your match
+- Upgrade to $5/month Hobby plan if you want the app always awake
 
-### WebSockets on Render
-The overlay and admin pages now automatically use:
-- `ws://` on local HTTP
-- `wss://` on Render HTTPS
+---
 
-So OBS browser sources work correctly from your public Render URL.
+## 📁 Project Structure
 
-### Health check
-Use:
-```text
-/healthz
 ```
-
----
-
-## OBS overlay URLs
-
-Replace the base URL with your Render domain:
-
-```text
-https://your-app.onrender.com/overlays/lower-third.html
-https://your-app.onrender.com/overlays/scorecard.html
-https://your-app.onrender.com/overlays/batsmen.html
-https://your-app.onrender.com/overlays/bowling.html
-https://your-app.onrender.com/overlays/runrate.html
-https://your-app.onrender.com/overlays/partnerships.html
-https://your-app.onrender.com/overlays/teamsheet.html
-https://your-app.onrender.com/overlays/chase.html
-https://your-app.onrender.com/overlays/celebrations.html
-https://your-app.onrender.com/overlays/summary.html
-```
-
----
-
-## Required environment variables
-
-| Variable | Required | Description |
-|---|---:|---|
-| `ADMIN_PASSWORD` | Yes | Password for the scoring admin panel |
-| `SESSION_SECRET` | Yes | Used to sign auth cookies |
-| `DATABASE_URL` | Yes on Render | Postgres connection string |
-| `PORT` | No | Render sets this automatically |
-
----
-
-## Project structure
-
-```text
 cricket-scorer/
-├── server.js
+├── server.js              Server, API, auth, WebSocket
+├── railway.json           Railway config
+├── .env.example           Environment variable template
+├── .gitignore
 ├── package.json
-├── package-lock.json
-├── render.yaml
-├── railway.json
-├── .env.example
-├── README.md
 └── public/
-    ├── login.html
-    ├── admin/index.html
-    └── overlays/
+    ├── login.html         Login page
+    ├── admin/index.html   Scoring dashboard
+    └── overlays/          10 OBS overlay files
 ```
 
----
+## Render deployment
 
-## Notes
+This project is prepared for Render using `render.yaml`.
 
-- If `DATABASE_URL` is missing, the app falls back to **memory-only** state for local testing.
-- For real deployment, use Postgres so state persists properly.
-- OBS overlay URLs remain public by design because OBS browser sources do not carry your admin login session.
+### What changed for Render
+- Postgres-backed match state using `DATABASE_URL`
+- WebSocket URLs auto-switch between `ws://` and `wss://`
+- Health check endpoint at `/healthz`
+- Secure auth cookie support behind Render proxy
+
+### Deploy steps
+1. Push the project to GitHub.
+2. In Render, create a new **Blueprint** from the repo.
+3. Set `ADMIN_PASSWORD`.
+4. Deploy.
+
+### Notes
+- Match state is stored server-side in Postgres instead of a local file.
+- If `DATABASE_URL` is not set, the app falls back to a fresh in-memory state on startup.
